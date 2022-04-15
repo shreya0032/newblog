@@ -303,7 +303,7 @@ $('document').ready(function () {
         var id = $(this).attr('data-id')
         var action = $(this).attr('data-action')
             // reloadDatatable = $('#userlist').DataTable();
-            console.log('ok test')
+            // console.log('ok test')
         $(this).toggleClass("fa-eye-slash fa-eye");
         var input = $($(this).attr("toggle"));
         if (input.attr("type") == "password") {
