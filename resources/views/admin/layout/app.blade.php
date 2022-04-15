@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        @include('admin.includes.head')
+    </head>
+
+    <body class="hold-transition sidebar-mini layout-fixed">
+
+        <!--== ( Wrapper Start ) ==-->
+
+        <div class="wrapper">
+
+            <!------ ( Loader Content Start ) ------>
+            @include('admin.includes.loader')
+            <!------ ( Loader Content End ) ------>
+
+
+
+            <!------ ( Header Start ) ------>
+            @include('admin.includes.header')
+            <!------ ( Header End ) ------>
+
+
+
+
+            <!------ ( Side-Bar Start ) ------>
+            @include('admin.includes.sidebar')
+            <!------ ( Side-Bar End ) ------>
+
+
+
+            <!------ ( Content Start ) ------>
+            <div class="content-wrapper">
+
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                {{-- <h1>{{ $tableName }}</h1> --}}
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                                    <li class="breadcrumb-item active">
+                                        {{-- {{ ($page == 1) ? ucfirst(end($urlArray)) : " " }} --}}
+                                    </li>
+
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+
+                <!-- Main content -->
+                <section class="content">
+                    <div class="container-fluid">
+                        @yield('content')
+                    </div>
+                </section>
+                <!-- /.content -->
+            </div>
+            <!------ ( Content End ) ------>
+
+
+
+            <!------ ( Footer Start ) ------>
+            @include('admin.includes.footer')
+            <!------ ( Footer End ) ------>
+
+
+        </div>
+
+        <!--== ( Wrapper End ) ==-->
+
+        @include('admin.includes.foot')
+
+        @stack('scripts')
+    </body>
+
+
+
+</html>
