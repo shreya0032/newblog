@@ -299,18 +299,18 @@ $('document').ready(function () {
 
     $("#close").click(function () {
 
-        // var type = $(this).attr('data-type'),
-        //     id = $(this).attr('data-id'),
-        //     action = $(this).attr('data-action'),
-        //     // reloadDatatable = $('#userlist').DataTable();
-        // console.log('ok')
-        // $(this).toggleClass("fa-eye-slash fa-eye");
-        // var input = $($(this).attr("toggle"));
-        // if (input.attr("type") == "password") {
-        //     input.attr("type", "text");
-        // } else {
-        //     input.attr("type", "password");
-        // }
+        var type = $(this).attr('data-type')
+        var id = $(this).attr('data-id')
+        var action = $(this).attr('data-action')
+            // reloadDatatable = $('#userlist').DataTable();
+            console.log('ok test')
+        $(this).toggleClass("fa-eye-slash fa-eye");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
     });
 
     $('#register').on('submit', function (event) {
