@@ -40,6 +40,13 @@ class PermissionController extends Controller
         // dd($permissionTable);
         return DataTables::of($permissionTable)
             ->addIndexColumn()
+            ->addColumn('action', function ($data){
+                    $btn = '';
+                    $btn = '<a href=" ' . route('permission.edit', $data->id) .' " class="edit btn btn-primary btn-sm">Edit</a>';
+                    return $btn;
+                })
+    
+                ->rawColumns(['action'])
             ->make(true);
     }
     
@@ -70,8 +77,8 @@ class PermissionController extends Controller
             $permission->name = $values['name'];
             if ($permission->save()) {
 
-                $superAdmin = User::where('name', 'super admin')->first();
-                $superAdmin->givePermissionTo($permission->id);
+                // $superAdmin = User::where('name', 'super admin')->first();
+                // $superAdmin->givePermissionTo($permission->id);
                 
                 return response()->json(['status'=>1, 'msg'=>'New permission added successfully']);
             } else {
@@ -96,14 +103,38 @@ class PermissionController extends Controller
 
     public function update(Request $request)
     {
-        $validated = $request->validate(['name' => ['required']]);
+        // $validated = $request->validate(['name' => ['required']]);
         
-        $permission = Permission::where('id', $request->id)->update($validated);
-        if($permission){
-            return redirect()->route('permission.index');
-        }
-        else{
-            return redirect()->back()->with('message', 'not updated');
+        // $permission = Permission::where('id', $request->id)->update($validated);
+        // if($permission){
+        //     return redirect()->route('permission.index');
+        // }
+        // else{
+        //     return redirect()->back()->with('message', 'not updated');
+        // }
+
+
+
+        $values = $request->only('name');
+        $validator = Validator::make($request->only('name'), [
+            'name' => 'required|min:2|max:100'
+        ]);
+        
+
+        if ($validator->fails()) {
+           return response()->json(['status'=>0, 'error'=>$validator->errors()->toArray()]);
+        } else {
+            $permission = new Permission;
+            $permission->name = $values['name'];
+            if ($permission->save()) {
+
+                // $superAdmin = User::where('name', 'super admin')->first();
+                // $superAdmin->givePermissionTo($permission->id);
+                
+                return response()->json(['status'=>1, 'msg'=>'Permission updated successfully']);
+            } else {
+                return response()->json(['status'=>0, 'msg'=>'Permission not added']);
+            }
         }
 
     }

@@ -96,7 +96,9 @@ $('document').ready(function () {
                         $('span.' + prefix + '_error').text(val[0])
                     })
                 } else {
+                    // $('#updateUserForm')[0].reset();
                     $('#updateUserForm')[0].reset();
+
                     alert(data.msg);
                     // reloadDatatable.ajax.reload(null, false);
                 }
@@ -126,9 +128,9 @@ $('document').ready(function () {
     })
 
     $('body').delegate('#userlist .deleteuser', 'click', function () {
-        var type = $(this).attr('data-type'),
-            id = $(this).attr('data-id'),
-            action = $(this).attr('data-action'),
+        var type = $(this).attr('data-type')
+        var    id = $(this).attr('data-id')
+        var    action = $(this).attr('data-action')
             // reloadDatatable = $('#userlist').DataTable();
         if (type == 'delete') {
             res = confirm('Do you really want to delete?');
@@ -253,6 +255,39 @@ $('document').ready(function () {
                     })
                 } else {
                     $('#permissionForm')[0].reset();
+                    alert(data.msg);
+                }
+            }
+
+        })
+
+
+    })
+
+    $('#updatePermission').on('submit', function (event) {
+        submitForm = $(this);
+        submitBtn = $(this).find('#updatePermissionBtn');
+        event.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            dataType: 'json',
+            data: new FormData(this),
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                // submitBtn.attr("disabled", "disabled")
+                $(document).find('span.error-text').text('');
+            },
+            success: function (data) {
+                if (data.status == 0) {
+                    // console.log('not ok');
+                    $.each(data.error, function (prefix, val) {
+                        $('span.' + prefix + '_error').text(val[0])
+                    })
+                } else {
+                    $('#updatePermission')[0].reset();
                     alert(data.msg);
                 }
             }

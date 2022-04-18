@@ -113,9 +113,9 @@ class RoleController extends Controller
     
         $roles= Role::where('id', $id)->first();
         // dd($roles->permissions);
-        $permissionView = DB::table('permissions')->whereIn('name', ['add', 'edit', 'delete', 'details'])->get();
-        $permissionTable = DB::table('permissions')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->get();
-
+        $permissionView = DB::table('permissions')->whereIn('name', ['add', 'edit', 'details'])->get();
+        $permissionTable = DB::table('permissions')->whereNotIn('name', ['add', 'edit', 'details', 'delete'])->get();
+        // dd($permissionTable);
         // dd($permissions);
         $tables = DB::connection('mysql2')->select('SHOW TABLES');
         

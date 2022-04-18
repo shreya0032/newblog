@@ -61,50 +61,15 @@
     <!-- /.card-header -->
     <div class="card-header">
         <h4 class="m-t-0 header-title font-weight-bold text-center"> Manage Permissions </h4>
-        <a class="btn btn-dark" href="{{ route('roles.index') }}">Back </a>
+        {{-- <a class="btn btn-dark" href="{{ route('roles.index') }}">Back </a> --}}
     </div>
     <!-- /.card-header -->
 
 
     <!-- /.card-body -->
     <div class="card-body">
-        {{-- <div class="flex space-x-2 mt-4 p-2">
-            <h4>Table View permission</h4>
-            @if($roles->permissions)
-                @foreach($roles->permissions as $role_permission)
-                    @if($role_permission->name == 'add' ||$role_permission->name == 'edit'|| $role_permission->name == 'details')
-                        <button class="btn btn-success link-light">
-                            
-                            <i class="fa fa-times" aria-hidden="true" id="close" style="color: red;"></i>                                                
-
-                                {{ $role_permission->name }}
-                        </button>
-                    @endif
-                @endforeach
-            @endif
-        </div> --}}
-
-        {{-- <div class="flex space-x-2 p-2">   
-            <h4>Table permission</h4> 
-            @if($roles->permissions)
-                @foreach($roles->permissions as $role_permission)
-                    @if($role_permission->name == 'add' ||$role_permission->name == 'edit'|| $role_permission->name == 'details')
-                        @continue
-                    @endif
-                    <button class="btn btn-success link-light">
-                        <a class="btn btn-success link-light" href="{{ route('roles.permission.delete', [$roles->id, $role_permission->id]) }}" role="button">
-                        <i class="fa fa-times" aria-hidden="true" id="close" style="color: red;"></i>                                                
-
-                            {{ $role_permission->name }}
-                            
-                        </a>
-                    </button>
-                @endforeach
-            @endif
-        </div> --}}
-
-        {{-- {{ dd($permissions) }} --}}
-        {{-- updateManagePermission --}}
+       
+        <a class="btn btn-dark" href="{{ route('roles.index') }}">Back </a>
         <form method="POST" action="{{ route('roles.permission.update') }}"
             id="updateManagePermission">
             @csrf
@@ -146,7 +111,7 @@
                 <h4>Table permission</h4> 
                 @if($roles->permissions)
                     @foreach($roles->permissions as $role_permission)
-                        @if($role_permission->name == 'add' ||$role_permission->name == 'edit'|| $role_permission->name == 'details')
+                        @if($role_permission->name == 'add' ||$role_permission->name == 'edit'|| $role_permission->name == 'details' ||$role_permission->name == 'delete')
                             @continue
                         @endif
                         <button class="btn btn-success link-light">

@@ -78,8 +78,10 @@ class UserController extends Controller
             $user->email = $values['email'];
             $user->password = Hash::make($values['password']);
 
+            // $user = User::create($values);
             if ($user->save()) {
                 // return view('admin.user.index',  compact('user'));
+                $user->assignRole('user');
                 return response()->json(['status' => 1, 'msg' => 'New user added successfully']);
             } else {
                 return redirect()->back()->with('error', 'something wrong');
@@ -101,11 +103,12 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-
-        $validated = $request->validate([
-            'name' => 'required|min:2',
-            'email' => 'required|email:rfc,dns|max:100',
-        ]);
+        $roleName = '';
+        
+        // $validated = $request->validate([
+        //     'name' => 'required|min:2',
+        //     'email' => 'required|email:rfc,dns|max:100',
+        // ]);
 
         $values = $request->only('name', 'email');
         $validator = Validator::make($request->all(), [
@@ -118,12 +121,14 @@ class UserController extends Controller
         }else{
 
             $user = User::where('id', $request->id)->first();
+            // dd($user->roles);
             foreach ($user->roles as $user_role) {
                 $roleName = $user_role->name;
-               
+                
             }
-
+            // dd($roleName);
             if($user->hasAnyRole($roleName)){
+                
                 if ($request->roles != null){
                     if ($roleName != $request->roles) {
                         $user->removeRole($roleName);
@@ -136,14 +141,25 @@ class UserController extends Controller
                         return response()->json(['status' => 1, 'msg' => 'User updated successfully']);
                     }
                 }else {
-                    // $user->syncPermissions([$request->permission]);
+                    
                     User::where('id', $request->id)->update($values);
                     return response()->json(['status' => 1, 'msg' => 'User updated successfully']);
                 }
             }
             else {
-                return response()->json(['status' => 1, 'msg' => 'Role cannot be null']);
+                if($request->roles != null){
+                    $user->assignRole($request->roles);
+                    return response()->json(['status' => 1, 'msg' => 'Role assigned']);
+                }else{
+                    return response()->json(['status' => 1, 'msg' => 'Role cannot be null']);
+                }
+                
             }
+
+
+            // if($user->hasAnyRole($roleName)){
+            //     dd($roleName);
+            // }
 
         }
         
