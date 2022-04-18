@@ -1,3 +1,14 @@
+@php
+    // $urlArray = explode('/', url()->current());
+    // dd($urlArray);
+    // $x = 0; $count = 0;
+    // foreach ($urlArray as $key => $value) {
+    //     $x = (($value == 'admin') ? ($x+1) : $x);
+    //     $count = (($x >= 1) ? ($count+1) : 0);
+    // }
+    // $checkFor = ($count >= 2) ? 'dashboardPage' : 'loginPage';
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 

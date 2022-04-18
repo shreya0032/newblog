@@ -1,30 +1,32 @@
-@php    
+@php
     $dynamic_table = DB::connection('mysql2')->select('SHOW TABLES');
-    
+
     // $permissionNames = auth()->user()->getPermissionNames();
-    
+
 
     // foreach ($dynamic_table as $keys => $values) {
-    //     foreach($values as $key=>$value){
-    //         if($value == $permissionNames){
-    //             dd($permissionNames);
-    //         }
-    //     }
+    // foreach($values as $key=>$value){
+    // if($value == $permissionNames){
+    // dd($permissionNames);
+    // }
+    // }
     // }
 
     // foreach ($dynamic_table as $keys => $values) {
-    //     foreach($values as $key=>$value){
-    //         if(auth()->user()->hasAnyPermission($value)){
-    //             dd($value);
-    //         }
-    //     }
+    // foreach($values as $key=>$value){
+    // if(auth()->user()->hasAnyPermission($value)){
+    // dd($value);
+    // }
+    // }
     // }
 
 
-    
+
 
 @endphp
 
+
+@auth
 <aside class="main-sidebar sidebar-light-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
@@ -59,56 +61,73 @@
                 </li>
 
                 @role('super admin')
-                <li class="nav-item ">
-                    <a href="{{ route('user.index') }}" class="nav-link ">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            User
-                        </p>
-                    </a>
-                </li>
+                    <li class="nav-item ">
+                        <a href="{{ route('user.index') }}" class="nav-link ">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                User
+                            </p>
+                        </a>
+                    </li>
                 @endrole
-                
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-table "></i>
-                        <p>
-                            Table
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
 
-                    {{-- <ul class="nav nav-treeview">
-                        @foreach($dynamic_table as $values)
-                            @foreach($values as $key=>$value)
-                                <li class="nav-item">
-                                    <a href="{{ route("table.show", $value) }}" class="nav-link">
+                @role('super admin')
+                    <li class="nav-item menu-open">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-table "></i>
+                            <p>
+                                Table
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            @foreach($dynamic_table as $values)
+                                @foreach($values as $key=>$value)
+                                    <li class="nav-item">
+                                        <a href="{{ route("table.show", $value) }}"
+                                            class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>{{ $value }}</p>
-                                    </a>
-                                </li>
+                                        </a>
+                                    </li>
+                                @endforeach
                             @endforeach
-                        @endforeach
-                    </ul> --}}
+                        </ul>
 
-                    <ul class="nav nav-treeview">
-                        @foreach($dynamic_table as $values)
-                            @foreach($values as $key=>$value)
-                                @if(auth()->user()->hasAnyPermission($value))
-                                <li class="nav-item">
-                                    <a href="{{ route("table.show", $value) }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>{{ $value }}</p>
-                                    </a>
-                                </li>
-                                @endif
+
+                    </li>
+                @else
+                {{-- <h4>ss</h4> --}}
+                    <li class="nav-item menu-open">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-table "></i>
+                            <p>
+                                Table
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            @foreach($dynamic_table as $values)
+                                @foreach($values as $key=>$value)
+                                    @if(auth()->user()->hasAnyPermission($value))
+                                        <li class="nav-item">
+                                            <a href="{{ route("table.show", $value) }}"
+                                                class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>{{ $value }}</p>
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endforeach
                             @endforeach
-                        @endforeach
-                    </ul>
-                </li>
-                
+                        </ul>
+                    </li>
+                @endrole
+
                 @auth
-                    @role('super admin')
+                @role('super admin')
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-table"></i>
@@ -118,7 +137,7 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-    
+
                             <li class="nav-item">
                                 <a href="{{ route('roles.index') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -137,35 +156,21 @@
                                     <p>Activity log</p>
                                 </a>
                             </li>
-                           
+
                         </ul>
                     </li>
-                    @endrole
+                @endrole
                 @endauth
-                
-                
-            
+
+
+
             </ul>
-           
+
         </nav>
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
 </aside>
-
+@endauth
 
 {{-- @endif --}}
-
-
-
-
-
-
-
-
-
-
-
-
-
- 

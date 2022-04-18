@@ -221,6 +221,12 @@ $(document).ready(function () {
                         }, 
                         {
                             data: "name",
+                        },
+                        {
+                            data: 'action',
+                            name: 'actions',
+                            orderable: false,
+                            searchable: false
                         }
                     ]
 

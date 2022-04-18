@@ -25,6 +25,8 @@
             
             <!-- /.card-body -->
             <div class="card-body">
+                <a class= 'btn btn-dark mb-3' href="{{ route('permission.index') }}" role="button">BACK</a>
+                    
                     <form action="{{ route('permission.store') }}" method="POST" id="permissionForm" >
                         @csrf
                         <div class="form-group">
