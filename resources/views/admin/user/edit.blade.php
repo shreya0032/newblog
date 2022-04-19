@@ -9,7 +9,7 @@
             <!-- /.card-header -->
             <div class="card-header">
                 <h4 class="m-t-0 header-title font-weight-bold text-center">Update User </h4>
-                <a class= 'btn btn-dark' href="{{ route('user.index') }}" role="button">BACK</a>
+                <a class= 'btn btn-dark' href="{{ route('user.index') }}" role="button">Back</a>
             </div>
             <!-- /.card-header -->
 
@@ -22,6 +22,7 @@
                     
                     <div class="form-group">
                         <label for="name">User Name</label>
+                        {{-- {{ dd($user->name) }} --}}
                         <input type="text" id="name" class="form-control" name="name" value={{ $user->name }}>
                         <span class="text-danger error-text name_error"></span>
 

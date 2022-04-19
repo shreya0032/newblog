@@ -36,7 +36,6 @@
                         width="100%">
                         <thead>
                             <tr>
-                                <th>Sl no</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Action</th>

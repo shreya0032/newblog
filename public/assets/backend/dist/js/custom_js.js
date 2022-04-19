@@ -35,30 +35,14 @@ $('document').ready(function () {
                 } else {
                     $('#createUserForm')[0].reset();
                     alert(data.msg);
+                    window.location.href = "index";
+                    // setTimeout(function () {
+                    //     window.location.href = "{{route('user.index')}}";
+                    //   }, 2 * 1000);
                 }
             }
 
         })
-
-        // Swal.fire({
-        //     title: 'Are you sure?',
-        //     text: "You won't be able to revert this!",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#3085d6',
-        //     cancelButtonColor: '#d33',
-        //     confirmButtonText: 'Yes, delete it!'
-        //   }).then((result) => {
-        //     if (result.isConfirmed) {
-        //       // Swal.fire(
-        //       //   'Deleted!',
-        //       //   'Your file has been deleted.',
-        //       //   'success'
-        //       // )
-        //     }
-        //   })
-
-
     })
 
     $(".toggle-password").click(function () {
@@ -67,8 +51,10 @@ $('document').ready(function () {
         var input = $($(this).attr("toggle"));
         if (input.attr("type") == "password") {
             input.attr("type", "text");
+            $(this).css("cursor","pointer");
         } else {
             input.attr("type", "password");
+            $(this).css("cursor","default");
         }
     });
 
@@ -100,56 +86,57 @@ $('document').ready(function () {
                     $('#updateUserForm')[0].reset();
 
                     alert(data.msg);
+                    window.location.reload();
                     // reloadDatatable.ajax.reload(null, false);
                 }
             }
 
         })
 
-        // Swal.fire({
-        //     title: 'Are you sure?',
-        //     text: "You won't be able to revert this!",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#3085d6',
-        //     cancelButtonColor: '#d33',
-        //     confirmButtonText: 'Yes, delete it!'
-        //   }).then((result) => {
-        //     if (result.isConfirmed) {
-        //       // Swal.fire(
-        //       //   'Deleted!',
-        //       //   'Your file has been deleted.',
-        //       //   'success'
-        //       // )
-        //     }
-        //   })
-
 
     })
 
     $('body').delegate('#userlist .deleteuser', 'click', function () {
         var type = $(this).attr('data-type')
-        var    id = $(this).attr('data-id')
-        var    action = $(this).attr('data-action')
-            // reloadDatatable = $('#userlist').DataTable();
+        var id = $(this).attr('data-id')
+        var action = $(this).attr('data-action')
+        var reloadDatatable = $('#userlist').DataTable();
         if (type == 'delete') {
-            res = confirm('Do you really want to delete?');
-            if (res === false) {
-                return;
-            } 
-                $.ajax({
+            // res = confirm('Do you really want to delete?');
+            // if (res === false) {
+            //     return;
+            // } 
+
+            // console.log(action);
+            // console.log('true');
+            // window.location.replace(action);
+
+
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              //  window.location.replace(action);
+
+              $.ajax({
                     url: action,
                     type: 'get',
                     dataType: 'json',
                     beforeSend: function () {
-                        loader(1);
+                        // loader(1);
                     },
                     success: function (msg) {
-                        loader(0);
+                        // loader(0);
                         if (msg.status == 0) {
-                            toaster(msg.title, msg.msg, msg.type);
+                            // toaster(msg.title, msg.msg, msg.type);
                         } else {
-                            toaster(msg.title, msg.msg, msg.type);
+                            // toaster(msg.title, msg.msg, msg.type);
                             reloadDatatable.ajax.reload(null, false);
                         }
                         setTimeout(function () {
@@ -157,6 +144,9 @@ $('document').ready(function () {
                         }, 5000);
                     }
                 });
+
+            }
+          })
 
         } else {
 
@@ -190,6 +180,7 @@ $('document').ready(function () {
                 } else {
                     $('#roleForm')[0].reset();
                     alert(data.msg);
+                    window.location.href = "index";
                     // reloadDatatable.ajax.reload(null, false);
                 }
             }
@@ -225,11 +216,60 @@ $('document').ready(function () {
                 } else {
                     $('#updateRoleForm')[0].reset();
                     alert(data.msg);
+                    window.location.reload();
                 }
             }
 
         })
     })
+
+    $('body').delegate('#rolelist .deleterole', 'click', function () {
+        var type = $(this).attr('data-type')
+        var id = $(this).attr('data-id')
+        var action = $(this).attr('data-action')
+        var reloadDatatable = $('#rolelist').DataTable();
+        if (type == 'delete') {
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              //  window.location.replace(action);
+
+              $.ajax({
+                    url: action,
+                    type: 'get',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        // loader(1);
+                    },
+                    success: function (msg) {
+                        // loader(0);
+                        if (msg.status == 0) {
+                            // toaster(msg.title, msg.msg, msg.type);
+                        } else {
+                            // toaster(msg.title, msg.msg, msg.type);
+                            reloadDatatable.ajax.reload(null, false);
+                        }
+                        setTimeout(function () {
+                            $("#alert").css('display', 'none');
+                        }, 5000);
+                    }
+                });
+
+            }
+          })
+
+        } else {
+
+        }
+    });
+
 
     $('#permissionForm').on('submit', function (event) {
         submitForm = $(this);
@@ -256,6 +296,7 @@ $('document').ready(function () {
                 } else {
                     $('#permissionForm')[0].reset();
                     alert(data.msg);
+                    window.location.href = "index";
                 }
             }
 
@@ -289,6 +330,7 @@ $('document').ready(function () {
                 } else {
                     $('#updatePermission')[0].reset();
                     alert(data.msg);
+                    window.location.reload();
                 }
             }
 
@@ -324,29 +366,53 @@ $('document').ready(function () {
                 } else {
                     $('#updateManagePermission')[0].reset();
                     alert(data.msg);
+                    window.location.reload();
                     // reloadDatatable.ajax.reload(null, false);
                   
                 }
             }
 
         })
-    })
-
-    $("#close").click(function () {
-
-        var type = $(this).attr('data-type')
-        var id = $(this).attr('data-id')
-        var action = $(this).attr('data-action')
-            // reloadDatatable = $('#userlist').DataTable();
-            // console.log('ok test')
-        $(this).toggleClass("fa-eye-slash fa-eye");
-        var input = $($(this).attr("toggle"));
-        if (input.attr("type") == "password") {
-            input.attr("type", "text");
-        } else {
-            input.attr("type", "password");
-        }
     });
+
+    $('.deletePermission').on('click', function(event){
+    // console.log('ok');
+        event.preventDefault();
+        var action = $('.deleteper').attr('href');
+        console.log(action);
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              //  window.location.replace(action);
+
+              $.ajax({
+                    url: action,
+                    type: 'get',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        // loader(1);
+                    },
+                    success: function (msg) {
+                        // loader(0);
+                        if (msg.status == 0) {
+                            // toaster(msg.title, msg.msg, msg.type);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+                });
+
+            }
+          })
+    })
 
     $('#register').on('submit', function (event) {
         submitForm = $(this);
@@ -381,11 +447,4 @@ $('document').ready(function () {
 
     })
 
-    $('.deleteuser').click(function (e) {
-        // var userDetails = $(this).data
-        // console.log(userDetails);
-
-        e.preventDefault();
-        alert('hello')
-    })
 });

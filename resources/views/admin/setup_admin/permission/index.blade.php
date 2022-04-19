@@ -22,7 +22,6 @@
                         width="100%">
                         <thead>
                             <tr>
-                                <th>Sl no</th>
                                 <th>Permission</th>
                             </tr>
                         </thead>
@@ -46,7 +45,6 @@
                         width="100%">
                         <thead>
                             <tr>
-                                <th>Sl no</th>
                                 <th>Table Name</th>
                                 <th>Action</th>
                             </tr>

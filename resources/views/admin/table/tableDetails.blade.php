@@ -33,9 +33,9 @@
                     <div class="btn-group pull-right ">
                         <a class="btn btn-primary"
                             href="{{ route('filter', $tableName) }}">Filter</a>
-
+        
                     </div>
-
+        
                     <div class="mt-4">
                         <table id="example1"
                             class="table tableStyle table-bordered table-bordered dt-responsive nowrap dataTable"
@@ -43,17 +43,17 @@
                             <thead>
                                 <tr>
                                     @foreach($columns as $column)
-
+        
                                         <th>{{ $column }}</th>
-
+        
                                     @endforeach
                                     <th>Action</th>
                                 </tr>
                             </thead>
-
+        
                             <tbody>
                                 @foreach($table_data as $item)
-
+        
                                     <tr>
                                         @foreach($columns as $column)
                                             <td>{{ $item->$column }}</td>
@@ -70,23 +70,23 @@
                                 </td>
                                 </tr>
                 @endforeach
-
+        
                 </tbody>
-
+        
                 </table>
             </div>
             
         </div>
-
+        
         @else
-
+        
         <div class="card">
             <div class="card-header">
                 <h4 class="m-t-0 header-title font-weight-bold text-center">{{ ucfirst($tableName) }} Table</h4>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                
+              
                 @if(auth()->user()->can('add'))
 
                     <div class="btn-group pull-left  m-t-15">

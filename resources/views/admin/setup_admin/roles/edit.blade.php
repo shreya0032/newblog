@@ -8,14 +8,15 @@
             {{-- <h2>ss</h2> --}}
             <!-- /.card-header -->
             <div class="card-header">
-                <h4 class="m-t-0 header-title">Update Permission </h4>
-                <a class= 'btn btn-dark' href="{{ route('roles.index') }}" role="button">BACK</a>
+                <h4 class="m-t-0 header-title font-weight-bold text-center">Update Role </h4>
+                
                 {{-- {{ dd($permission) }} --}}
             </div>
             <!-- /.card-header -->
 
             <!-- /.card-body -->
             <div class="card-body">
+                <a class= 'btn btn-dark' href="{{ route('roles.index') }}" role="button">Back</a>
                     <form action="{{ route('roles.update') }}" method="POST"
                         id="updateRoleForm">
                         @csrf

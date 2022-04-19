@@ -68,7 +68,7 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::get('/roles/delete/{id?}', [RoleController::class, 'delete'])->name('roles.delete');
     Route::get('/roles/manage-permission/{id?}', [RoleController::class, 'managePermission'])->name('roles.permission');
     Route::post('/roles/update/manage-permission', [RoleController::class, 'updatePermission'])->name('roles.permission.update');
-    Route::get('/role/delete/manage-permission/{rid?}/{pid?}', [RoleController::class, 'deletePermission'])->name('roles.permission.delete');
+    Route::get('/roles/delete/manage-permission/{rid?}/{pid?}', [RoleController::class, 'deletePermission'])->name('roles.permission.delete');
 
 
     // /*===================Permission========================*/ 
@@ -92,12 +92,6 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::post('/user/update', [UserController::class, 'update'])->name('user.update');
     // Route::post('/user/{id?}/roles/{id?}/delete', [UserController::class, 'userRoleDelete'])->name('user.role.delete');
     Route::get('/user/delete/{id?}', [UserController::class, 'delete'])->name('user.delete');
-    
-    Route::get('/test-url', [UserController::class, 'testUrl']);
-
-
-
-
     });
 
 });

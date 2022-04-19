@@ -76,19 +76,18 @@
 
             <input type="hidden" name="id" value="{{ $roles->id }}">
 
-
-
             <div class="flex space-x-2 mt-4 p-2">
                 <h4>Table view permission</h4>
                 @if($roles->permissions)
                     @foreach($roles->permissions as $role_permission)
                         @if($role_permission->name == 'add' ||$role_permission->name == 'edit'|| $role_permission->name == 'details')
-                            <button class="btn btn-success link-light">
-                                
-                                <i class="fa fa-times" aria-hidden="true" id="close" style="color: red;"></i>                                                
-    
+                        <button>
+                                <a href="{{ route('roles.permission.delete', [$roles->id, $role_permission->id]) }}" class="delete btn btn-info link-light deleteper" data-type="delete"  title="Delete">
                                     {{ $role_permission->name }}
-                            </button>
+                                </a>
+                                <i class="fa fa-times deletePermission" aria-hidden="true" id=""  style="color: black;"></i>                                                
+                            
+                        </button>
                         @endif
                     @endforeach
                 @endif
@@ -98,7 +97,7 @@
                 <label for="permission" class="block font-medium text-gray-700">Permission</label>
                 <select id="permission" name="permission" autocomplete="permission-name"
                     class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <option value=""></option>
+                    <option value=""disabled selected hidden>Select your option</option>
                     @foreach($permissionView as $permission)
                         <option value="{{ $permission->name }}">{{ $permission->name }}</option>
                     @endforeach
@@ -114,18 +113,17 @@
                         @if($role_permission->name == 'add' ||$role_permission->name == 'edit'|| $role_permission->name == 'details' ||$role_permission->name == 'delete')
                             @continue
                         @endif
-                        <button class="btn btn-success link-light">
-                            <a class="btn btn-success link-light" href="{{ route('roles.permission.delete', [$roles->id, $role_permission->id]) }}" role="button">
-                            <i class="fa fa-times" aria-hidden="true" id="close" style="color: red;"></i>                                                
-    
+                        <button>
+                            <a href="{{ route('roles.permission.delete', [$roles->id, $role_permission->id]) }}" class="delete btn btn-info link-light deleteper" data-type="delete"  title="Delete">
                                 {{ $role_permission->name }}
-                                
                             </a>
+                            <i class="fa fa-times deletePermission" aria-hidden="true" id=""  style="color: black;"></i>                                                
+                        
                         </button>
                     @endforeach
                 @endif
             </div>
-
+            
             <div class="sm:col-span-6">
                 <label for="table_permission" class="block text-sm font-medium text-gray-700">Table Permission</label>
                 <select id="table_permission" name="table_permission" 
@@ -137,7 +135,7 @@
                         @endforeach                        
                     @endforeach --}}
 
-                    <option value=""></option>
+                    <option value="" disabled selected hidden>Select your option</option>
                     @foreach($permissionTable as $permission)
                         <option value="{{ $permission->name }}">{{ $permission->name }}</option>
                     @endforeach

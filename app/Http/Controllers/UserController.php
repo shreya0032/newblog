@@ -17,14 +17,6 @@ class UserController extends Controller
 {
     public function index()
     {
-        // $userList = User::whereNotIn('name', ['super admin'])->get();
-        // $user = DB::table('users')
-        //         ->whereNotIn('users.name', ['super admin'])
-        //         ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-        //         ->join('roles', 'model_has_roles.model_id', '=', 'roles.id')
-        //         ->select('users.name','users.email','roles.name')
-        //         ->get();
-        // dd($user);
         return view('admin.user.index');
     }
 
@@ -32,20 +24,19 @@ class UserController extends Controller
     public function getUserList()
     {
 
-        $userList = User::whereNotIn('name', ['super admin'])->get();
+        $userList = User::orderBy('id', 'desc')->whereNotIn('name', ['super admin'])->get();
         foreach($userList as $role){
             $role = $role->name;
             // dd($role);
         }
         // $userList = DB::table('users')->whereNotIn('name', ['super admin'])->select('id', 'name', 'email')->get();
         return DataTables::of($userList)
-            ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 $delete_url= ''.route('user.delete' , $data->id );
                 $btn = '';
-                $btn = '<a href=" ' . route('user.edit') . '/' . $data->id . ' " class="edit btn btn-primary btn-sm">Edit</a>';
+                $btn = '<a href=" ' . route('user.edit') . '/' . $data->id . ' " class="edit btn btn-primary btn-sm mr-3">Edit</a>';
                 // $btn .=  '<a href=" ' . route('user.delete') . '/' . $data->id . ' " class="delete btn btn-danger btn-sm deleteuser">Delete</a>';
-                $btn .= '<a href="JavaScript:void(0);" data-action="' . route('user.delete') . '/' . $data->id . '" data-type="delete" class="delete btn btn-danger btn-sm deleteuser" title="Delete">Test</a>';
+                $btn .= '<a href="JavaScript:void(0);" data-action="' . route('user.delete') . '/' . $data->id . '" data-type="delete" class="delete btn btn-danger btn-sm mr-3 deleteuser" title="Delete">Delete</a>';
                 return $btn;
             })
             // ->addColumn()
@@ -64,7 +55,7 @@ class UserController extends Controller
         // dd($request);
         $values = $request->only('name', 'email', 'password');
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:2|max:100',
+            'name' => 'required|min:2|max:100|regex:/[a-zA-Z0-9\s]+/',
             'email' => 'required|email:rfc,dns|max:100|unique:users',
             'password' => 'required|min:8',
             'confirmPassword' => 'required|same:password|min:8'
@@ -84,7 +75,7 @@ class UserController extends Controller
                 $user->assignRole('user');
                 return response()->json(['status' => 1, 'msg' => 'New user added successfully']);
             } else {
-                return redirect()->back()->with('error', 'something wrong');
+                return response()->json(['status' => 0, 'msg' => 'Problem occured']);;
             }
         }
     }
@@ -112,7 +103,7 @@ class UserController extends Controller
 
         $values = $request->only('name', 'email');
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:2|max:100',
+            'name' => 'required|min:2|max:100|regex:/[a-zA-Z0-9\s]+/',
             'email' => 'required|email:rfc,dns',
         ]);
         
@@ -246,7 +237,7 @@ class UserController extends Controller
         $user = User::find($id)->delete();
         if ($user) {
             // return redirect()->route('user.index')->with('message', 'Item delete successful');
-            return response()->json(['status'=>1, 'type' => "success", 'title' => "Delete", 'msg'=>'User delete successsfully']);
+           return response()->json(['status'=>1, 'type' => "success", 'title' => "Delete", 'msg'=>'User delete successsfully']);
         } else {
             return response()->json(['status'=>0, 'msg'=>'User not deleted']);
         }

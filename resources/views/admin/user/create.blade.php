@@ -48,9 +48,18 @@
                         </div>
             
                         <div class="form-group col-md-6">
-                            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control" value="">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <span toggle="#confirmPassword" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
+                                    </div>
+                                </div>
+                                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control" value="">
+                            </div>
+                            
                             <span class="text-danger error-text confirmPassword_error"></span>
                         </div>
+
                         <div class="form-group col-md-3">
                             <button type="submit" id="submitUserForm" class="btn btn-primary btn-block">Submit</button>
                         </div>

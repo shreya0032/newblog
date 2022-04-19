@@ -93,10 +93,7 @@ class TableController extends Controller
         return view('admin.table.add_table', ['data' => $columnName]);
     }
 
-
-
-
-
+    
     public function tableSave(Request $request, $tableName)
     {
 
@@ -114,8 +111,8 @@ class TableController extends Controller
 
 
         if ($validator->fails()) {
-            // return response()->json(['status' => 0, 'errors' => $validator->errors()->toArray()]);
-            return redirect()->back()->with('errors');
+            return response()->json(['status' => 0, 'errors' => $validator->errors()->toArray()]);
+            // return redirect()->back()->with('errors');
         } else {
 
             $query = DB::connection('mysql2')->table($tableName)->insert($values);

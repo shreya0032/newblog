@@ -36,10 +36,9 @@ class PermissionController extends Controller
 
     public function getTableList()
     {
-        $permissionTable = DB::table('permissions')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
+        $permissionTable = DB::table('permissions')->orderBy('id', 'asc')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
         // dd($permissionTable);
         return DataTables::of($permissionTable)
-            ->addIndexColumn()
             ->addColumn('action', function ($data){
                     $btn = '';
                     $btn = '<a href=" ' . route('permission.edit', $data->id) .' " class="edit btn btn-primary btn-sm">Edit</a>';
