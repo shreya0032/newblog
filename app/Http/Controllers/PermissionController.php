@@ -10,6 +10,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
+
 class PermissionController extends Controller
 {
     public function index()
@@ -66,6 +67,11 @@ class PermissionController extends Controller
         $values = $request->only('name');
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2|max:100|unique:permissions'
+        ], [
+            'name.required' => 'The permission name is required.',
+            'name.min' => 'The permission name must be at least 2 characters.',
+            'name.max' => 'The permission name cannot exit 100 characters',
+            'name.unique' => 'The permission name has already been taken',
         ]);
         
 
@@ -75,10 +81,6 @@ class PermissionController extends Controller
             $permission = new Permission;
             $permission->name = $values['name'];
             if ($permission->save()) {
-
-                // $superAdmin = User::where('name', 'super admin')->first();
-                // $superAdmin->givePermissionTo($permission->id);
-                
                 return response()->json(['status'=>1, 'msg'=>'New permission added successfully']);
             } else {
                 return response()->json(['status'=>0, 'msg'=>'Permission not added']);
@@ -117,6 +119,11 @@ class PermissionController extends Controller
         $values = $request->only('name');
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2|max:100'
+        ],[
+            'name.required' => 'The permission name is required.',
+            'name.min' => 'The permission name must be at least 2 characters.',
+            'name.max' => 'The permission name cannot exit 100 characters',
+            'name.unique' => 'The permission name has already been taken',
         ]);
         
 

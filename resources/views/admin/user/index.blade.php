@@ -8,7 +8,7 @@
         <div class="card">
 
             <!-- /.card-header -->
-            <div class="card-header text-center">
+            <div class="card-header">
 
                 <h4 class="m-t-0 header-title font-weight-bold text-center">User List</h4>
             </div>

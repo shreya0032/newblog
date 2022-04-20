@@ -1,9 +1,10 @@
 $(document).ready(function () {
             var url = window.location.href;
+            console.log(url);
             var split = url.split('/');
             var lastseg = split.pop();
             // console.log(lastseg);
-            // console.log(url);
+            console.log(url);
             // axios.get('http://localhost/ecommerce/public/table/product/getrow')
             axios.get(url + '/getrow')
                 .then(function (response) {
@@ -115,9 +116,9 @@ $(document).ready(function () {
                     language: {
                         "searchPlaceholder": "Search records"
                     },
-                    "order": [
-                        [0, "desc"]
-                    ],
+                    // "order": [
+                    //     [0, "asc"]
+                    // ],
                     "columns": [
                         {
                             data: "name",

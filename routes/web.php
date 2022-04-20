@@ -45,8 +45,9 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::post('table/{table}/edit/update', [TableController::class, 'updateTableList'])->name('product.update')->middleware('permission:edit');
     Route::get('table/{table}/delete/{id?}', [TableController::class, 'deleteTableList'])->name('product.delete')->middleware('permission:delete');
     Route::get('table/{table}/getrow', [TableController::class, 'getrow']);
-    Route::get('filter/{table}', [TableController::class, 'filter'])->name('filter');
-    Route::get('filter/search/{table}', [TableController::class, 'filterSearch'])->name('filter.search');
+    Route::get('table/filter/{table}', [TableController::class, 'filter'])->name('filter');
+    Route::post('table/{table}/filter-result', [TableController::class, 'filterSearch'])->name('filter.search');
+    // Route::post('filter/search/{table}', [TableController::class, 'filterSearch'])->name('filter.search');
     Route::get('export/csv/{table}', [TableController::class, 'exportCsv'])->name('export.csv');
 
 

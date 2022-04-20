@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
+use Spatie\Permission\PermissionRegistrar;
 
 class RoleController extends Controller
 {
@@ -57,6 +58,11 @@ class RoleController extends Controller
         $values = $request->only('name');
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2|max:100|unique:roles'
+        ],[
+            'name.required' => 'The role name is required.',
+            'name.min' => 'The role name must be at least 2 characters.',
+            'name.max' => 'The role name cannot exit 100 characters',
+            'name.unique' => 'The role name has already been taken',
         ]);
 
         if ($validator->fails()) {
@@ -89,6 +95,11 @@ class RoleController extends Controller
         // $values = $request->only('name');
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2'
+        ],[
+            'name.required' => 'The role name is required.',
+            'name.min' => 'The role name must be at least 2 characters.',
+            'name.max' => 'The role name cannot exit 100 characters',
+            'name.unique' => 'The role name has already been taken',
         ]);
         if($validator->fails()){
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
@@ -148,6 +159,7 @@ class RoleController extends Controller
             else{
                 $roles->givePermissionTo($request->permission);
                 $roles->givePermissionTo($request->table_permission);
+                app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
                 return response()->json(['status'=>1, 'msg'=>'Permission added']);
             }
         }
@@ -157,6 +169,8 @@ class RoleController extends Controller
             }
             else{
                 $roles->givePermissionTo($request->table_permission);
+                // [\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+                app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
                 return response()->json(['status'=>1, 'msg'=>'New table permission added']);
             }
             
@@ -167,6 +181,7 @@ class RoleController extends Controller
             }
             else{
                 $roles->givePermissionTo($request->permission);
+                app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
                 return response()->json(['status'=>1, 'msg'=>'Permission added']);
             }
         }

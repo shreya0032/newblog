@@ -37,10 +37,10 @@ class TableController extends Controller
 
     public function tableShow($tableName)
     {
-
         // $tableName = $tableName;
         $columns = Schema::Connection('mysql2')->getColumnListing($tableName);
         $table_data = DB::connection('mysql2')->table($tableName)->paginate(5);
+        // return view('admin.table.tableDetails');
         return view('admin.table.tableDetails', compact('columns', 'table_data', 'tableName'));
     }
 
@@ -57,7 +57,7 @@ class TableController extends Controller
     {
         $this->table = $tableName;
         $user = auth()->user();
-        $table_data = DB::connection('mysql2')->table($tableName)->orderBy('id', 'desc');
+        $table_data = DB::connection('mysql2')->table($tableName);
 
         $datatables =  Datatables::of($table_data)
             ->addColumn('action', function ($data) use ($user) {
@@ -68,6 +68,7 @@ class TableController extends Controller
                 //     $btn .=  '<a href=" ' . route('product.delete', [$this->table, $data->id]) . ' " class="delete btn btn-danger btn-sm">Delete</a>';
                 //     return $btn;
                 // }
+                
                 if ($user->can('edit')) {
                     $btn = '<a href=" ' . route('product.edit', [$this->table, $data->id]) . ' " class="edit btn btn-primary btn-sm">Edit</a>';
                     return $btn;
@@ -93,28 +94,13 @@ class TableController extends Controller
         return view('admin.table.add_table', ['data' => $columnName]);
     }
 
-    
+
     public function tableSave(Request $request, $tableName)
     {
 
-        $values = $request->all();
-        foreach ($values as $key => $value) {
-            if ($key == '_token') {
-                unset($values[$key]);
-                $validator = Validator::make($values, [$key => 'required']);
-            }
-        }
+        $values = $request->except('_token');
 
-        foreach ($values as $key => $value) {
-            $validator = Validator::make($values, [$key => 'required']);
-        }
-
-
-        if ($validator->fails()) {
-            return response()->json(['status' => 0, 'errors' => $validator->errors()->toArray()]);
-            // return redirect()->back()->with('errors');
-        } else {
-
+        if ( !empty(array_filter($values))) {
             $query = DB::connection('mysql2')->table($tableName)->insert($values);
 
             if ($query) {
@@ -128,7 +114,24 @@ class TableController extends Controller
             } else {
                 return redirect()->back();
             }
+        } else {
+            return redirect()->back()->with('msg', 'Atleast one field is required');
         }
+        // dd($values);
+        // if(!$values){
+        //     return redirect()->back()->with('msg', 'Atleast one field required');
+        // }
+        // foreach ($values as $key => $value) {
+        //     $validator = Validator::make($values, [$key => 'sometimes'], 
+        //         [
+        //             $value.'sometimes' => 'Atleast one field required',
+        //         ]
+        //     );
+            
+        // }
+        
+
+       
     }
 
 
@@ -212,28 +215,75 @@ class TableController extends Controller
 
     public function filterSearch(Request $request, $tableName)
     {
+        if(empty(array_filter($request['select'])) ||empty(array_filter($request['column']))){
+            return redirect()->back()->with('msg', "Fill atleast one field");
+        }else{
+            $columns = Schema::Connection('mysql2')->getColumnListing($tableName);
+            $selects = $request['select'];
+            $search_texts = $request['column'];
 
-        $columns = Schema::Connection('mysql2')->getColumnListing($tableName);
-        $selects = $request['select'];
-        $search_texts = $request['column'];
+            $table_data = DB::connection('mysql2')->table($tableName)
 
-        $table_data = DB::connection('mysql2')->table($tableName)
-
-            ->where(function ($table_data) use ($selects, $search_texts, $columns) {
-                foreach ($columns as $key => $column) {
-                    if ($selects[$key] == 'like%...%') {
-                        $table_data->orwhere($column, 'like',  '%' . $search_texts[$key] . '%');
-                    } elseif ($selects[$key] == 'is_null') {
-                        $table_data->orwhere($column, $search_texts[$key], 'IS NULL');
-                    } elseif ($selects[$key] == 'is_not_null') {
-                        $table_data->orwhere($column, $search_texts[$key], 'IS NOT NULL');
-                    } else {
-                        $table_data->orwhere($column, $selects[$key], $search_texts[$key]);
+                ->where(function ($table_data) use ($selects, $search_texts, $columns) {
+                    foreach ($columns as $key => $column) {
+                        if ($selects[$key] == 'like%...%') {
+                            $table_data->orwhere($column, 'like',  '%' . $search_texts[$key] . '%');
+                        } elseif ($selects[$key] == 'is_null') {
+                            $table_data->orwhere($column, $search_texts[$key], 'IS NULL');
+                        } elseif ($selects[$key] == 'is_not_null') {
+                            $table_data->orwhere($column, $search_texts[$key], 'IS NOT NULL');
+                        } else {
+                            $table_data->orwhere($column, $selects[$key], $search_texts[$key]);
+                        }
                     }
-                }
-            })->get();
+                })->get();
 
-        return view('admin.table.tableDetails', compact('table_data', 'columns', 'tableName'));
+                if(!$table_data){
+                    dd('ok');
+                }
+                
+
+                return view('admin.table.tableDetails', compact('table_data', 'columns', 'tableName'));
+        }
+
+        
+
+       
+    
+        // if(empty(array_filter($request['select'])) ||empty(array_filter($request['column']))){
+        //     // dd('not ok');
+        //     return redirect()->back()->with('msg', "Fill the field");
+        // }else{
+        //     // dd('ok');
+        //     $columns = Schema::Connection('mysql2')->getColumnListing($tableName);
+        //     $selects = $request['select'];
+        //     $search_texts = $request['column'];
+
+        //     $table_data = DB::connection('mysql2')->table($tableName)
+
+        //         ->where(function ($table_data) use ($selects, $search_texts, $columns) {
+        //             foreach ($columns as $key => $column) {
+        //                 if ($selects[$key] == 'like%...%') {
+        //                     $table_data->orwhere($column, 'like',  '%' . $search_texts[$key] . '%');
+        //                 } elseif ($selects[$key] == 'is_null') {
+        //                     $table_data->orwhere($column, $search_texts[$key], 'IS NULL');
+        //                 } elseif ($selects[$key] == 'is_not_null') {
+        //                     $table_data->orwhere($column, $search_texts[$key], 'IS NOT NULL');
+        //                 } else {
+        //                     $table_data->orwhere($column, $selects[$key], $search_texts[$key]);
+        //                 }
+        //             }
+        //         })->get();
+
+
+        //     $datatables =  Datatables::of($table_data)
+        //                     ->make(true);
+
+        //     return $datatables;
+        // }
+        
+        // return view('admin.table.tableDetails', compact('table_data', 'columns', 'tableName'));
+    
     }
 
 

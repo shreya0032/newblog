@@ -10,22 +10,31 @@ $tableName = $url[$count-1];
 @section('content')
 
 <div class="row">
-    <div class="col-md-6">
-        <div class="card card-primary">
+    <div class="col-12">
+        <div class="card">
             <div class="card-header">
-                <h3 class="card-title">General</h3>
+                <h4 class="header-title font-weight-bold text-center">Filter</h4>
+                
             </div>
 
             <div class="card-body">
-                <form action="{{ route('filter.search', $tableName) }}" method="GET" id="">
-                    {{-- @csrf --}}
+                @if (Session::get('msg'))
+                    <div class="alert alert-danger">
+                        <ul>
+                            <li>{{ Session::get('msg') }}</li>
+                        </ul>
+                    </div>
+                    
+                @endif
+                <form action="{{ route('filter.search', $tableName) }}" method="POST" id="">
+                    @csrf
                     @foreach ($columns as $column)
                     <div class="form-group">                        
                         <div class="input-group mb-3">
-                            <div class="input-group-prepend">
+                            {{-- <div class="input-group-prepend"> --}}
                                 <label class="input-group-text" for="operator">{{ $column }}</label>
-                                <select class="custom-select" name='select[]' id="operator">
-                                    <option selected>Operator</option>
+                                <select class="form-select" name='select[]' id="operator">
+                                    <option selected >Operator</option>
                                     <option value="="> = </option>
                                     <option value=">"> > </option>
                                     <option value=">="> >= </option>
@@ -37,7 +46,7 @@ $tableName = $url[$count-1];
                                     <option value="is_null"> IS NULL </option>
                                     <option value="is_not_null"> IS NOT NULL </option>
                                 </select>
-                            </div>
+                            {{-- </div> --}}
                             <input name='column[]' type="text" class="form-control" aria-label="Text input with segmented dropdown button">
                         </div>
                     </div>

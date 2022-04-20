@@ -1,18 +1,13 @@
 $('document').ready(function () {
-    // $('.testmsg').click(function(){
-    //     // event.preventDefault();
-    //     console.log('testmsg');
-    //     // href
-    // })
-
-    // function testDeleteFunction(){
-    //     console.log('testmsg');
-    // }
+    
 
     $('#createUserForm').on('submit', function (event) {
         event.preventDefault();
         submitForm = $(this);
         submitBtn = $(this).find('#submitUserForm');
+        submitBtnLoader = $(this).find('#loaderSubmitUserForm');
+        // submitBtn.hide();
+        // submitBtnLoader.show();
 
         $.ajax({
             url: $(this).attr('action'),
@@ -24,9 +19,12 @@ $('document').ready(function () {
             contentType: false,
             beforeSend: function () {
                 // submitBtn.attr("disabled", "disabled")
-                $(document).find('span.error-text').text('');
+                // submitBtnLoader.show();
+                // $(document).find('span.error-text').text('');
+                submitBtn.attr("disabled", "disabled").text('Please wait...');
             },
             success: function (data) {
+                submitBtn.attr("disabled", false).text('Submit');
                 if (data.status == 0) {
                     // console.log('not ok');
                     $.each(data.error, function (prefix, val) {
@@ -44,6 +42,42 @@ $('document').ready(function () {
 
         })
     })
+
+    // $('#createUserForm').on('submit', function (event) {
+    //     event.preventDefault();
+    //     submitForm = $(this);
+    //     submitBtn = $(this).find('#submitUserForm');
+
+    //     $.ajax({
+    //         url: $(this).attr('action'),
+    //         type: $(this).attr('method'),
+    //         dataType: 'json',
+    //         data: new FormData(this),
+    //         cache: false,
+    //         processData: false,
+    //         contentType: false,
+    //         beforeSend: function () {
+    //             // submitBtn.attr("disabled", "disabled")
+    //             $(document).find('span.error-text').text('');
+    //         },
+    //         success: function (data) {
+    //             if (data.status == 0) {
+    //                 // console.log('not ok');
+    //                 $.each(data.error, function (prefix, val) {
+    //                     $('span.' + prefix + '_error').text(val[0])
+    //                 })
+    //             } else {
+    //                 $('#createUserForm')[0].reset();
+    //                 alert(data.msg);
+    //                 window.location.href = "index";
+    //                 // setTimeout(function () {
+    //                 //     window.location.href = "{{route('user.index')}}";
+    //                 //   }, 2 * 1000);
+    //             }
+    //         }
+
+    //     })
+    // })
 
     $(".toggle-password").click(function () {
 
@@ -169,9 +203,11 @@ $('document').ready(function () {
             contentType: false,
             beforeSend: function () {
                 // submitBtn.attr("disabled", "disabled")
-                $(document).find('span.error-text').text('');
+                // $(document).find('span.error-text').text('');
+                submitBtn.attr("disabled", "disabled").text('Please wait...');
             },
             success: function (data) {
+                submitBtn.attr("disabled", false).text('Submit');
                 if (data.status == 0) {
                     // console.log('not ok');
                     $.each(data.error, function (prefix, val) {
@@ -284,10 +320,11 @@ $('document').ready(function () {
             processData: false,
             contentType: false,
             beforeSend: function () {
-                // submitBtn.attr("disabled", "disabled")
+                submitBtn.attr("disabled", "disabled").text('Please wait..');
                 $(document).find('span.error-text').text('');
             },
             success: function (data) {
+                submitBtn.attr("disabled", false).text('Submit');
                 if (data.status == 0) {
                     // console.log('not ok');
                     $.each(data.error, function (prefix, val) {
@@ -318,10 +355,11 @@ $('document').ready(function () {
             processData: false,
             contentType: false,
             beforeSend: function () {
-                // submitBtn.attr("disabled", "disabled")
+                submitBtn.attr("disabled", "disabled").text('Please wait..')
                 $(document).find('span.error-text').text('');
             },
             success: function (data) {
+                submitBtn.attr("disabled", false).text('Submit');
                 if (data.status == 0) {
                     // console.log('not ok');
                     $.each(data.error, function (prefix, val) {
@@ -354,10 +392,11 @@ $('document').ready(function () {
             processData: false,
             contentType: false,
             beforeSend: function () {
-                // submitBtn.attr("disabled", "disabled")
+                submitBtn.attr("disabled", "disabled").text('Please wait..');
                 $(document).find('span.error-text').text('');
             },
             success: function (data) {
+                submitBtn.attr("disabled", false).text('Assign');
                 if (data.status == 0) {
                     // console.log('not ok');
                     $.each(data.error, function (prefix, val) {

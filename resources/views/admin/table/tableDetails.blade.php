@@ -36,7 +36,7 @@
         
                     </div>
         
-                    <div class="mt-4">
+                    <div class="mt-4 col-md-12">
                         <table id="example1"
                             class="table tableStyle table-bordered table-bordered dt-responsive nowrap dataTable"
                             width="100%">
@@ -86,7 +86,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              
+              {{-- {{ dd(auth()->user()->permissions) }} --}}
                 @if(auth()->user()->can('add'))
 
                     <div class="btn-group pull-left  m-t-15">
@@ -105,7 +105,8 @@
 
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4 col-md-12">
+
                         <table id="example1"
                             class="table tableStyle table-bordered table-bordered dt-responsive nowrap dataTable"
                             width="100%">

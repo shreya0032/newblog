@@ -32,6 +32,15 @@ $lastSeg = $url[$count-2];
             </div>
 
             <div class="card-body">
+                @if (Session::get('msg'))
+                    <div class="alert alert-danger">
+                        <ul>
+                            <li>{{ Session::get('msg') }}</li>
+                        </ul>
+                    </div>
+                    
+                @endif
+
                 <form action="{{ route('product.add.save', $lastSeg) }}" method="POST" id="{{ $lastSeg }}">
                     @csrf
                     @foreach( $data as $items => $item )

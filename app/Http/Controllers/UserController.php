@@ -24,7 +24,7 @@ class UserController extends Controller
     public function getUserList()
     {
 
-        $userList = User::orderBy('id', 'desc')->whereNotIn('name', ['super admin'])->get();
+        $userList = User::whereNotIn('name', ['super admin'])->orderBy('id','asc')->get();
         foreach($userList as $role){
             $role = $role->name;
             // dd($role);
@@ -46,8 +46,8 @@ class UserController extends Controller
 
     public function create()
     {
-
-        return view('admin.user.create');
+        $roles = Role::all();
+        return view('admin.user.create', compact('roles'));
     }
 
     public function store(Request $request)
@@ -58,7 +58,11 @@ class UserController extends Controller
             'name' => 'required|min:2|max:100|regex:/[a-zA-Z0-9\s]+/',
             'email' => 'required|email:rfc,dns|max:100|unique:users',
             'password' => 'required|min:8',
-            'confirmPassword' => 'required|same:password|min:8'
+            'confirmPassword' => 'required|same:password|min:8',
+            'roles' => 'required'
+        ], [
+            'confirmPassword.same' => "The confirm password and password doesn't match.",
+            "roles.required" => 'Please assign a role.'
         ]);
         if ($validator->fails()) {
             // return redirect()->back()->withErrors($validator)->with('error', 'Validation failed')->withInput();
@@ -68,22 +72,21 @@ class UserController extends Controller
             $user->name = $values['name'];
             $user->email = $values['email'];
             $user->password = Hash::make($values['password']);
+            
 
-            // $user = User::create($values);
             if ($user->save()) {
-                // return view('admin.user.index',  compact('user'));
-                $user->assignRole('user');
+                $user->assignRole($request->roles);
                 return response()->json(['status' => 1, 'msg' => 'New user added successfully']);
             } else {
                 return response()->json(['status' => 0, 'msg' => 'Problem occured']);;
             }
+            
         }
     }
 
     public function edit($id)
     {
         $roles = Role::all();
-        // $permissions = Permission::all();
         $permissions = DB::table('permissions')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
         // dd($permissions);
         $user = User::where('id', $id)->first();
