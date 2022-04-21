@@ -29,7 +29,14 @@
                 <h3 class="card-title">General</h3>
             </div>
             <div class="card-body">
-               
+                @if (Session::get('msg'))
+                    <div class="alert alert-danger">
+                        <ul>
+                            <li>{{ Session::get('msg') }}</li>
+                        </ul>
+                    </div>
+                    
+                @endif
                 <form id="updateAdminForm" action="{{ route('product.update', $lastSeg) }}" method="POST"
                     enctype="multipart/form-data">
                     

@@ -106,12 +106,13 @@ $('document').ready(function () {
             processData: false,
             contentType: false,
             beforeSend: function () {
-                // submitBtn.attr("disabled", "disabled")
+                submitBtn.attr("disabled", "disabled").text('Please wait..')
                 $(document).find('span.error-text').text('');
             },
             success: function (data) {
+                submitBtn.attr("disabled", false).text('Update');
                 if (data.status == 0) {
-                    // console.log('not ok');
+                    console.log(data.error);
                     $.each(data.error, function (prefix, val) {
                         $('span.' + prefix + '_error').text(val[0])
                     })
@@ -240,10 +241,11 @@ $('document').ready(function () {
             processData: false,
             contentType: false,
             beforeSend: function () {
-                // submitBtn.attr("disabled", "disabled")
+                submitBtn.attr("disabled", "disabled").text('Please wait..')
                 $(document).find('span.error-text').text('');
             },
             success: function (data) {
+                submitBtn.attr("disabled", false).text('Update');
                 if (data.status == 0) {
                     // console.log('not ok');
                     $.each(data.error, function (prefix, val) {
@@ -359,7 +361,7 @@ $('document').ready(function () {
                 $(document).find('span.error-text').text('');
             },
             success: function (data) {
-                submitBtn.attr("disabled", false).text('Submit');
+                submitBtn.attr("disabled", false).text('Update');
                 if (data.status == 0) {
                     // console.log('not ok');
                     $.each(data.error, function (prefix, val) {
@@ -415,42 +417,44 @@ $('document').ready(function () {
     });
 
     $('.deletePermission').on('click', function(event){
-    // console.log('ok');
-        event.preventDefault();
-        var action = $('.deleteper').attr('href');
-        console.log(action);
+        // console.log('ok');
+            event.preventDefault();
+            var action = $(this).data('href');
+            // console.log($(this).data('href'));
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              //  window.location.replace(action);
-
-              $.ajax({
-                    url: action,
-                    type: 'get',
-                    dataType: 'json',
-                    beforeSend: function () {
-                        // loader(1);
-                    },
-                    success: function (msg) {
-                        // loader(0);
-                        if (msg.status == 0) {
-                            // toaster(msg.title, msg.msg, msg.type);
-                        } else {
-                            window.location.reload();
+            
+    
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  //  window.location.replace(action);
+    
+                  $.ajax({
+                        url: action,
+                        type: 'get',
+                        dataType: 'json',
+                        beforeSend: function () {
+                            // loader(1);
+                        },
+                        success: function (msg) {
+                            // loader(0);
+                            if (msg.status == 0) {
+                                // toaster(msg.title, msg.msg, msg.type);
+                            } else {
+                                window.location.reload();
+                            }
                         }
-                    }
-                });
-
-            }
-          })
+                    });
+    
+                }
+              })
     })
 
     $('#register').on('submit', function (event) {

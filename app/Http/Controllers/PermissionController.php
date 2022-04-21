@@ -24,14 +24,6 @@ class PermissionController extends Controller
         $permissionList = DB::table('permissions')->whereIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
         return DataTables::of($permissionList)
             ->addIndexColumn()
-            // ->addColumn('action', function ($data){
-            //     $btn = '';
-            //     $btn = '<a href=" ' . route('permission.edit') . '/' . $data->id. ' " class="edit btn btn-primary btn-sm">Edit</a>';
-            //     $btn .=  '<a href=" ' . route('permission.delete') .' " class="delete btn btn-danger btn-sm deleteuser">Delete</a>';
-            //     return $btn;
-            // })
-
-            // ->rawColumns(['action'])
             ->make(true);
     }
 
@@ -56,14 +48,7 @@ class PermissionController extends Controller
     }
     
     public function store(Request $request)
-    {   
-        // $table = '';
-        // $tables = DB::connection('mysql2')->select('SHOW TABLES');
-        // foreach($tables as $table){
-        //     Permission::create($tables);
-        // }
-        // dd($request);
-
+    {  
         $values = $request->only('name');
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2|max:100|unique:permissions'

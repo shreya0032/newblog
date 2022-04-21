@@ -73,14 +73,13 @@ class UserController extends Controller
             $user->email = $values['email'];
             $user->password = Hash::make($values['password']);
             
-
+            
             if ($user->save()) {
                 $user->assignRole($request->roles);
                 return response()->json(['status' => 1, 'msg' => 'New user added successfully']);
             } else {
-                return response()->json(['status' => 0, 'msg' => 'Problem occured']);;
+                return response()->json(['status' => 0, 'error' => 'Problem occured']);;
             }
-            
         }
     }
 
@@ -98,12 +97,6 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $roleName = '';
-        
-        // $validated = $request->validate([
-        //     'name' => 'required|min:2',
-        //     'email' => 'required|email:rfc,dns|max:100',
-        // ]);
-
         $values = $request->only('name', 'email');
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:2|max:100|regex:/[a-zA-Z0-9\s]+/',
@@ -115,12 +108,12 @@ class UserController extends Controller
         }else{
 
             $user = User::where('id', $request->id)->first();
-            // dd($user->roles);
+           
             foreach ($user->roles as $user_role) {
                 $roleName = $user_role->name;
                 
             }
-            // dd($roleName);
+            
             if($user->hasAnyRole($roleName)){
                 
                 if ($request->roles != null){
@@ -150,82 +143,7 @@ class UserController extends Controller
                 
             }
 
-
-            // if($user->hasAnyRole($roleName)){
-            //     dd($roleName);
-            // }
-
         }
-        
-
-
-
-
-
-
-
-
-
-
-
-
-        // $values = $request->only('name', 'email');
-        // $validator = Validator::make($request->all(), [
-        //     'name' => 'required|min:2|max:100',
-        //     'email' => 'required|email:rfc,dns',
-        // ]);
-
-       
-        // if ($validator->fails()) {
-        //     return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
-        // } else {
-        //     // $userDetails = new User;
-        //     $user = User::where('id', $request->id)->first();
-        //     // dd($user->permissions);
-
-        //     foreach ($user->roles as $user_role) {
-        //         $roleName = $user_role->name;
-               
-        //     }
-        //     // foreach ($user->permissions as $user_permissions) {
-        //     //     print_r($user_permissions->name);
-        //     //     exit();
-        //     //     $permissionsName = $user_permissions->name;
-        //     //     print_r($permissionsName);
-                
-        //     // }
-
-        //     if ($user->hasAnyRole($roleName)) {
-        //         if ($request->roles != null && $request->permission != null) {
-        //             if ($roleName != $request->roles) {
-        //                 $user->removeRole($roleName);
-        //                 $user->assignRole($request->roles);
-        //                 $user->givePermissionTo([$request->permission]);
-        //                 User::where('id', $request->id)->update($values);
-        //                 // DB::table('users')->where('id', $request->id)
-        //                 return response()->json(['status' => 1, 'msg' => 'User updated successfully']);
-        //             } else {
-        //                 User::where('id', $request->id)->update($values);
-        //                 return response()->json(['status' => 1, 'msg' => 'User updated successfully']);
-        //             }
-        //         } else {
-        //             // $user->syncPermissions([$request->permission]);
-        //             User::where('id', $request->id)->update($values);
-        //             return response()->json(['status' => 1, 'msg' => 'User updated successfully']);
-        //         }
-        //     }
-        //     else{
-        //         return response()->json(['status' => 1, 'msg' => 'Role cannot be null']);
-        //     }
-        // }
-
-
-        // if ($request->roles != null) {
-        //     echo('not null');
-        // }
-        // else{
-        //     echo('null');
-        // }
     }
 
     public function userRoleDelete($userId, $roleId)
@@ -234,9 +152,7 @@ class UserController extends Controller
     }
 
     public function delete($id)
-    {   
-        // return response()->json(['status'=>1, 'msg'=>'User delete successsfully'.$id]);
-
+    {  
         $user = User::find($id)->delete();
         if ($user) {
             // return redirect()->route('user.index')->with('message', 'Item delete successful');
@@ -244,9 +160,5 @@ class UserController extends Controller
         } else {
             return response()->json(['status'=>0, 'msg'=>'User not deleted']);
         }
-    }
-    public function testUrl()
-    {
-        return route('user.delete', 1);
     }
 }

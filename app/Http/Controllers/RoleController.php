@@ -15,8 +15,6 @@ class RoleController extends Controller
 {
     public function index()
     {
-        // $roles = Role::all();
-        // $roles = Role::whereNotIn('name', ['super admin'])->get();
         return view('admin.setup_admin.roles.index');
     }
 
@@ -37,11 +35,6 @@ class RoleController extends Controller
                 $btn .= '<a href="'. route('roles.permission', $data->id) .' " class="edit btn btn-success btn-sm">Manage Permission</a>';
                 return $btn;
             })
-            // ->addColumn('manage', function($data){
-                // url('roles/'.$data->id.'/permission')
-            //     $manageBtn = '<a href="'.route('roles.permission') . "/". $data->id.'" class="edit btn btn-success btn-sm">Manage Permission</a>';
-            // })
-
             ->rawColumns(['action'])
             ->make(true);
     }
@@ -91,8 +84,7 @@ class RoleController extends Controller
 
     public function update(Request $request)
     {
-        // $validated = $request->validate(['name' => ['required']]);
-        // $values = $request->only('name');
+        
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2'
         ],[
@@ -132,26 +124,11 @@ class RoleController extends Controller
 
     public function updatePermission(Request $request)
     {
-    //    dd($request);
+   
         $roles= Role::where('id', $request->id)->first();
-        // dd($roles->hasAnyPermission(['add', 'edit', 'details', 'delete']));
+       
         $modelRoles= DB::table('role_has_permissions')->where('role_id', $request->id)->get();
-        
-        // dd($modelRoles->permission_id);
-        // dd($roles->hasPermissionTo($request->permission));
-        // if($request != null){
-        //     if($roles->hasPermissionTo($request->permission)){
-        //         return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
-        //     }
-        //     else{
-        //         $roles->givePermissionTo($request->permission);
-        //         return response()->json(['status'=>1, 'msg'=>'Permission added']);
-        //     }
-        // }
-        // else{
-        //     return response()->json(['status'=>1, 'msg'=>'Permission is null']);
-        // }
-        
+
         if($request->permission != null && $request->table_permission != null ){
             if($roles->hasPermissionTo($request->permission) && $roles->hasPermissionTo($request->table_permission)){
                 return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
@@ -169,7 +146,6 @@ class RoleController extends Controller
             }
             else{
                 $roles->givePermissionTo($request->table_permission);
-                // [\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
                 app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
                 return response()->json(['status'=>1, 'msg'=>'New table permission added']);
             }
@@ -186,11 +162,6 @@ class RoleController extends Controller
             }
         }
         else{
-            // if($request->permission == null){
-            //     if($roles->hasAnyPermission(['add', 'edit', 'details', 'delete'])){
-            //         return response()->json(['status'=>1, 'msg'=>'Table permission is null, Updated']);
-            //     }
-            // }
 
             if($roles->hasAnyPermission(['add', 'edit', 'details', 'delete'])){
                 return response()->json(['status'=>1, 'msg'=>'Table permission is blank, Updated']);
@@ -206,22 +177,22 @@ class RoleController extends Controller
         $roles=Role::find($id)->delete();
         if($roles){
             return response()->json(['status'=>1, 'msg'=>'Role delete successfully']);
-            // return redirect()->route('roles.index')->with('message', 'Item delete successful');
         }
         else{
             return response()->json(['status'=>1, 'msg'=>'Role not deleted']);
-            // return redirect()->route('roles.index')->with('message', 'Item delete unsuccessful');
+            
         }
     }
 
     public function deletePermission($rid, $pid)
     {
-        // dd(Auth::user());
+        
         $roles = DB::table('role_has_permissions')
                     ->where('role_id', $rid)
                     ->where('permission_id', $pid)
                     ->delete();
         if($roles){
+            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
             return response()->json(['status'=>1, 'msg'=>'Permission deleted successfully']);
         }
         else{

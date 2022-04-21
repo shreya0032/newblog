@@ -116,7 +116,8 @@ class CreatePermissionTables extends Migration
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
-            $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();    }
+            
+        }
 
     /**
      * Reverse the migrations.

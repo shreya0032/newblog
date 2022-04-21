@@ -64,7 +64,7 @@
                             <label for="roles">Role Assign</label>
                             <select id="roles" name="roles" autocomplete="roles-name"
                                 class="form-select" aria-label="Default select example">
-                                <option disabled selected hidden >Select your option</option>
+                                <option value=" ">Choose a role</option>
                                     @foreach($roles as $role)
                                         @if ($role->name == "super admin")
                                             {{-- <option value=""></option> --}}

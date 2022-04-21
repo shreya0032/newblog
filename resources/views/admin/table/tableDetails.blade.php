@@ -35,10 +35,11 @@
                             href="{{ route('filter', $tableName) }}">Filter</a>
         
                     </div>
-        
-                    <div class="mt-4 col-md-12">
+                    {{-- table tableStyle table-bordered table-bordered dt-responsive nowrap dataTable --}}
+                    <div class="mt-4">
+                        
                         <table id="example1"
-                            class="table tableStyle table-bordered table-bordered dt-responsive nowrap dataTable"
+                            class="table table-bordered dt-responsive"
                             width="100%">
                             <thead>
                                 <tr>
@@ -86,7 +87,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              {{-- {{ dd(auth()->user()->permissions) }} --}}
+              
                 @if(auth()->user()->can('add'))
 
                     <div class="btn-group pull-left  m-t-15">
@@ -105,10 +106,10 @@
 
                     </div>
 
-                    <div class="mt-4 col-md-12">
+                    <div class="mt-4">
 
                         <table id="example1"
-                            class="table tableStyle table-bordered table-bordered dt-responsive nowrap dataTable"
+                            class="table table-bordered dt-responsive"
                             width="100%">
                             <thead>
                                 <tr>
@@ -134,9 +135,9 @@
                                                     href="{{ route('product.edit', [$tableName, $item->id]) }}">Edit</a>
                                             @endif
                                             {{-- @if(auth()->user()->can('delete'))
-                                            <a class="delete btn btn-danger btn-sm"
+                                                <a class="delete btn btn-danger btn-sm"
                                                 href="{{ route('product.delete', [$tableName, $item->id]) }}">Delete</a>
-                                @endif--}}
+                                            @endif--}}
                                 </td>
                                 </tr>
                 @endforeach

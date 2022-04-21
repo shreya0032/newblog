@@ -51,14 +51,15 @@
                         <label for="roles">Role Assign</label>
                         <select id="roles" name="roles" autocomplete="roles-name"
                             class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value=" " selected>Select your option</option>
                             @foreach($roles as $role)
                                 @if ($role->name == "super admin")
-                                    <option value=""></option>
+                                    <option hidden></option>
                                 @else
-                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                    <option value="{{ $role->name }}">{{ $role->name }}</option>
                                 @endif
                                     
-                                @endforeach
+                            @endforeach
                         </select>
 
                     </div>
@@ -92,7 +93,7 @@
                     </div> --}}
 
                     <div class="form-group">
-                        <button type="submit" id="submitUpdateForm" class="btn btn-primary btn-block">Submit</button>
+                        <button type="submit" id="submitUpdateForm" class="btn btn-primary btn-block">Update</button>
                     </div>
                 </form>
             </div>

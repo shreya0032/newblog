@@ -33,11 +33,11 @@ Route::get('/dashboard', [HomeController::class, 'showDashboard'])->name('dashbo
 
 Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], function() {
 
-    
+    // resources/views/admin/table/tableFilter.blade.php   
 
     /*===================Dynamic Table========================*/ 
 
-    Route::get('table/{table}', [TableController::class, 'tableShow'])->name('table.show')->middleware('permission:details');
+    Route::get('table/{table}', [TableController::class, 'tableShow'])->name('table.show')->middleware(['permission:details|add|edit']);
     Route::get('table/{table}/get', [TableController::class, 'getTableData'])->name('product.get')->middleware('permission:details');
     Route::get('table/{table}/add', [TableController::class, 'tableAdd'])->name('product.add')->middleware('permission:add');
     Route::post('table/{table}/add/save', [TableController::class, 'tableSave'])->name('product.add.save')->middleware('permission:add');
@@ -45,9 +45,9 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::post('table/{table}/edit/update', [TableController::class, 'updateTableList'])->name('product.update')->middleware('permission:edit');
     Route::get('table/{table}/delete/{id?}', [TableController::class, 'deleteTableList'])->name('product.delete')->middleware('permission:delete');
     Route::get('table/{table}/getrow', [TableController::class, 'getrow']);
-    Route::get('table/filter/{table}', [TableController::class, 'filter'])->name('filter');
-    Route::post('table/{table}/filter-result', [TableController::class, 'filterSearch'])->name('filter.search');
-    // Route::post('filter/search/{table}', [TableController::class, 'filterSearch'])->name('filter.search');
+    Route::get('table/filter/{table}/', [TableController::class, 'filter'])->name('filter');
+    Route::post('table/filter-search/{table}/', [TableController::class, 'filterSearch'])->name('filter.search');
+    // Route::get('table/{table}/filter-result', function(){return view('admin.table.tableFilter');})->name('filter.result');
     Route::get('export/csv/{table}', [TableController::class, 'exportCsv'])->name('export.csv');
 
 
