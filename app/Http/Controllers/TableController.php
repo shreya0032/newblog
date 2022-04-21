@@ -20,6 +20,8 @@ use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Models\Activiy;
 use App\Helpers\LogActivity;
+use Exception;
+use Illuminate\Support\Facades\Session;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -84,26 +86,32 @@ class TableController extends Controller
 
     public function tableSave(Request $request, $tableName)
     {
+        try{
+            $values = $request->except('_token');
 
-        $values = $request->except('_token');
+            if ( !empty(array_filter($values))) {
+                $query = DB::connection('mysql2')->table($tableName)->insert($values);
 
-        if ( !empty(array_filter($values))) {
-            $query = DB::connection('mysql2')->table($tableName)->insert($values);
+                if ($query) {
+                    LogActivity::addToLog([
+                        'table_name' => $tableName,
+                        'description' => 'add',
+                        'role_id' => auth()->user()->id,
+                        'present_info' => json_encode([$values]),
 
-            if ($query) {
-                LogActivity::addToLog([
-                    'table_name' => $tableName,
-                    'description' => 'add',
-                    'role_id' => auth()->user()->id,
-
-                ]);
-                return redirect()->route('table.show', $tableName);
+                    ]);
+                    return redirect()->route('table.show', $tableName);
+                } else {
+                    return redirect()->back()->with('msg', 'add error getting');
+                }
             } else {
-                return redirect()->back()->with('msg', 'add error getting');
+                return redirect()->back()->with('msg', 'Atleast one field is required');
             }
-        } else {
-            return redirect()->back()->with('msg', 'Atleast one field is required');
         }
+        catch (Exception $e){
+            return redirect()->back()->with('msg', json_encode($e->getMessage(), true));
+        }
+        
     }
 
 
@@ -123,29 +131,32 @@ class TableController extends Controller
 
     public function updateTableList(Request $request, $tableName)
     {
-        // dd($request->all());
-        $values = $request->except('_token');
-        $tabledata = DB::connection('mysql2')->table($tableName)->where('id', $values['id'])->get();
+        try{
+            $values = $request->except('_token');
+            $tabledata = DB::connection('mysql2')->table($tableName)->where('id', $values['id'])->get();
 
-        if ( !empty(array_filter($values))) {
-            $query = DB::connection('mysql2')->table($tableName)
-                    ->where('id', $values['id'])
-                    ->update($values);
+            if ( !empty(array_filter($values))) {
+                $query = DB::connection('mysql2')->table($tableName)
+                        ->where('id', $values['id'])
+                        ->update($values);
 
-            if ($query) {
-                LogActivity::addToLog([
-                    'table_name' => $tableName,
-                    'description' => 'update',
-                    'previous_info' => json_encode($tabledata),
-                    'present_info' => json_encode([$values]),
-                    'role_id' => auth()->user()->id,
-                    ]);
-                return redirect()->route('table.show', $tableName);
+                if ($query) {
+                    LogActivity::addToLog([
+                        'table_name' => $tableName,
+                        'description' => 'update',
+                        'previous_info' => json_encode($tabledata),
+                        'present_info' => json_encode([$values]),
+                        'role_id' => auth()->user()->id,
+                        ]);
+                    return redirect()->route('table.show', $tableName);
+                }else{
+                    return redirect()->back()->with('msg', 'error getting');
+                }
             }else{
-                return redirect()->back()->with('msg', 'error getting');
+                return redirect()->back()->with('msg', 'Atleast one field is required');
             }
-        }else{
-            return redirect()->back()->with('msg', 'Atleast one field is required');
+        }catch(Exception $e){
+            return redirect()->back()->with('msg', json_encode($e->getMessage(), true));
         }
     }
 
