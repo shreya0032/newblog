@@ -9,7 +9,7 @@
             <!-- /.card-header -->
             <div class="card-header">
                 <h4 class="m-t-0 header-title font-weight-bold text-center">Add Role </h4>
-                <a class= 'btn btn-dark' href="{{ route('roles.index') }}" role="button">BACK</a>
+                <a class= 'btn btn-dark' href="{{ route('roles.index') }}" role="button">Back</a>
             </div>
             <!-- /.card-header -->
 

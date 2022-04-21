@@ -25,14 +25,23 @@ $lastSeg = $url[$count-2];
 
 @section('content')
 <div class="row">
-    <div class="col-md-6">
-        <div class="card card-primary">
+    <div class="col-12">
+        <div class="card">
             <div class="card-header">
-                <h3 class="card-title">General</h3>
+                <h4 class="m-t-0 header-title font-weight-bold text-center">Add {{ ucfirst($lastSeg) }}</h4>
             </div>
 
             <div class="card-body">
-                <form action="{{ route('product.add.save', $lastSeg) }}" method="POST" id="">
+                @if (Session::get('msg'))
+                    <div class="alert alert-danger">
+                        <ul>
+                            <li>{{ Session::get('msg') }}</li>
+                        </ul>
+                    </div>
+                    
+                @endif
+
+                <form action="{{ route('product.add.save', $lastSeg) }}" method="POST" id="{{ $lastSeg }}">
                     @csrf
                     @foreach( $data as $items => $item )
 
@@ -42,7 +51,7 @@ $lastSeg = $url[$count-2];
 
                             @else
 
-                                <label for="{{ $item }}">{{ $item }}</label>
+                                <label for="{{ $item }}">{{ ucwords(str_replace('_', ' ', $item )) }}</label>
                                 <input type="text" id="{{ $item }}" class="form-control" name="{{ $item }}">
                                 <span class="text-danger error-text {{ $item }}_error"></span>
 

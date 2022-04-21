@@ -16,17 +16,12 @@
             <!-- /.card-body -->
             <div class="card-body">
 
-                <div class="pull-right">
-                    <a class="btn btn-dark" href="{{ route('permission.create') }}"><i
-                            class="ion-plus-circled"></i> Add New Permission</a>
-                </div>
                 <div class="mt-4">
                     <table id="permissionList"
                         class="table tableStyle table-bordered table-bordered dt-responsive nowrap" cellspacing="0"
                         width="100%">
                         <thead>
                             <tr>
-                                <th>Sl no</th>
                                 <th>Permission</th>
                             </tr>
                         </thead>
@@ -38,15 +33,20 @@
                     </table>
                 </div>
 
-
+                <div class="mt-4">
+                    <div class="pull-right">
+                        <a class="btn btn-dark" href="{{ route('permission.create') }}"><i
+                                class="ion-plus-circled"></i> Add New Permission</a>
+                    </div>
+                </div>
                 <div class="mt-4">
                     <table id="dynamicTableList"
                         class="table tableStyle table-bordered table-bordered dt-responsive nowrap" cellspacing="0"
                         width="100%">
                         <thead>
                             <tr>
-                                <th>Sl no</th>
                                 <th>Table Name</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 

@@ -19,7 +19,6 @@ class PermissionSeeder extends Seeder
         $permissions = [
             'add',
             'edit',
-            'delete',
             'details'
         ];
 

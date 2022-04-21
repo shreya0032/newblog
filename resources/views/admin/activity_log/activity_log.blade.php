@@ -14,7 +14,7 @@
                     class="table tableStyle table-bordered table-bordered dt-responsive nowrap dataTable" width="100%">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            
                             <th>Table Name</th>
                             <th>Description</th>
                             <th>Role</th>

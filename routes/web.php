@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
+| 
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
@@ -33,11 +33,11 @@ Route::get('/dashboard', [HomeController::class, 'showDashboard'])->name('dashbo
 
 Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], function() {
 
-    
+    // resources/views/admin/table/tableFilter.blade.php   
 
     /*===================Dynamic Table========================*/ 
 
-    Route::get('table/{table}', [TableController::class, 'tableShow'])->name('table.show')->middleware('permission:details');
+    Route::get('table/{table}', [TableController::class, 'tableShow'])->name('table.show')->middleware(['permission:details|add|edit']);
     Route::get('table/{table}/get', [TableController::class, 'getTableData'])->name('product.get')->middleware('permission:details');
     Route::get('table/{table}/add', [TableController::class, 'tableAdd'])->name('product.add')->middleware('permission:add');
     Route::post('table/{table}/add/save', [TableController::class, 'tableSave'])->name('product.add.save')->middleware('permission:add');
@@ -45,8 +45,9 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::post('table/{table}/edit/update', [TableController::class, 'updateTableList'])->name('product.update')->middleware('permission:edit');
     Route::get('table/{table}/delete/{id?}', [TableController::class, 'deleteTableList'])->name('product.delete')->middleware('permission:delete');
     Route::get('table/{table}/getrow', [TableController::class, 'getrow']);
-    Route::get('filter/{table}', [TableController::class, 'filter'])->name('filter');
-    Route::get('filter/search/{table}', [TableController::class, 'filterSearch'])->name('filter.search');
+    Route::get('table/filter/{table}/', [TableController::class, 'filter'])->name('filter');
+    Route::post('table/filter-search/{table}/', [TableController::class, 'filterSearch'])->name('filter.search');
+    // Route::get('table/{table}/filter-result', function(){return view('admin.table.tableFilter');})->name('filter.result');
     Route::get('export/csv/{table}', [TableController::class, 'exportCsv'])->name('export.csv');
 
 
@@ -68,7 +69,7 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::get('/roles/delete/{id?}', [RoleController::class, 'delete'])->name('roles.delete');
     Route::get('/roles/manage-permission/{id?}', [RoleController::class, 'managePermission'])->name('roles.permission');
     Route::post('/roles/update/manage-permission', [RoleController::class, 'updatePermission'])->name('roles.permission.update');
-    Route::get('/role/delete/manage-permission/{rid?}/{pid?}', [RoleController::class, 'deletePermission'])->name('roles.permission.delete');
+    Route::get('/roles/delete/manage-permission/{rid?}/{pid?}', [RoleController::class, 'deletePermission'])->name('roles.permission.delete');
 
 
     // /*===================Permission========================*/ 
@@ -92,12 +93,6 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::post('/user/update', [UserController::class, 'update'])->name('user.update');
     // Route::post('/user/{id?}/roles/{id?}/delete', [UserController::class, 'userRoleDelete'])->name('user.role.delete');
     Route::get('/user/delete/{id?}', [UserController::class, 'delete'])->name('user.delete');
-    
-    Route::get('/test-url', [UserController::class, 'testUrl']);
-
-
-
-
     });
 
 });

@@ -9,19 +9,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
+use Spatie\Permission\PermissionRegistrar;
 
 class RoleController extends Controller
 {
     public function index()
     {
-        // $roles = Role::all();
-        // $roles = Role::whereNotIn('name', ['super admin'])->get();
         return view('admin.setup_admin.roles.index');
     }
 
     public function getRoleList()
     {
-        $roleList = DB::table('roles')->whereNotIn('name', ['super admin'])->select('id', 'name')->get();
+        $roleList = DB::table('roles')->orderBy('id', 'desc')->whereNotIn('name', ['super admin'])->select('id', 'name')->get();
         
         $roleHasPermission = DB::table('roles')->whereNotIn('name', ['super admin'])
                             ->select('id', 'name')
@@ -29,19 +28,13 @@ class RoleController extends Controller
                             ->where('role_id');
         
         return DataTables::of($roleList)
-            ->addIndexColumn()
             ->addColumn('action', function ($data){
                 $btn = '';
-                $btn = '<a href=" ' . route('roles.edit') . '/' . $data->id. ' " class="edit btn btn-primary btn-sm">Edit</a>';
-                $btn .=  '<a href=" ' . route('roles.delete') .'/' .  $data->id.' " class="delete btn btn-danger btn-sm deleteuser">Delete</a>';
-                $btn .= '<a href="'. route('roles.permission')  .'/' .  $data->id.' " class="edit btn btn-success btn-sm">Manage Permission</a>';
+                $btn = '<a href=" ' . route('roles.edit', $data->id) . ' " class="edit btn btn-primary btn-sm mr-3">Edit</a>';
+                $btn .=  '<a href="JavaScript:void(0);" data-action="' . route('roles.delete') . '/' . $data->id . '" data-type="delete" class="delete btn btn-danger btn-sm mr-3 deleterole" title="Delete">Delete</a>';
+                $btn .= '<a href="'. route('roles.permission', $data->id) .' " class="edit btn btn-success btn-sm">Manage Permission</a>';
                 return $btn;
             })
-            // ->addColumn('manage', function($data){
-                // url('roles/'.$data->id.'/permission')
-            //     $manageBtn = '<a href="'.route('roles.permission') . "/". $data->id.'" class="edit btn btn-success btn-sm">Manage Permission</a>';
-            // })
-
             ->rawColumns(['action'])
             ->make(true);
     }
@@ -54,13 +47,15 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
-        // $validated = $request->validate(['name' => ['required', 'min:3', 'unique:roles']]);
-        // Role::create($validated);
-        // return redirect()->route('roles.index');
 
         $values = $request->only('name');
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2|max:100|unique:roles'
+        ],[
+            'name.required' => 'The role name is required.',
+            'name.min' => 'The role name must be at least 2 characters.',
+            'name.max' => 'The role name cannot exit 100 characters',
+            'name.unique' => 'The role name has already been taken',
         ]);
 
         if ($validator->fails()) {
@@ -68,6 +63,7 @@ class RoleController extends Controller
             return response()->json(['status'=>0, 'error'=>$validator->errors()->toArray()]);
         } else {
             $role = new Role;
+            // dd($role);
             $role->name = $values['name'];
             
             if ($role->save()) {
@@ -88,10 +84,14 @@ class RoleController extends Controller
 
     public function update(Request $request)
     {
-        // $validated = $request->validate(['name' => ['required']]);
-        // $values = $request->only('name');
+        
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2'
+        ],[
+            'name.required' => 'The role name is required.',
+            'name.min' => 'The role name must be at least 2 characters.',
+            'name.max' => 'The role name cannot exit 100 characters',
+            'name.unique' => 'The role name has already been taken',
         ]);
         if($validator->fails()){
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
@@ -113,9 +113,9 @@ class RoleController extends Controller
     
         $roles= Role::where('id', $id)->first();
         // dd($roles->permissions);
-        $permissionView = DB::table('permissions')->whereIn('name', ['add', 'edit', 'delete', 'details'])->get();
-        $permissionTable = DB::table('permissions')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->get();
-
+        $permissionView = DB::table('permissions')->whereIn('name', ['add', 'edit', 'details'])->get();
+        $permissionTable = DB::table('permissions')->whereNotIn('name', ['add', 'edit', 'details', 'delete'])->get();
+        // dd($permissionTable);
         // dd($permissions);
         $tables = DB::connection('mysql2')->select('SHOW TABLES');
         
@@ -124,32 +124,19 @@ class RoleController extends Controller
 
     public function updatePermission(Request $request)
     {
-    //    dd($request);
+   
         $roles= Role::where('id', $request->id)->first();
-        // dd($roles->hasAnyPermission(['add', 'edit', 'details', 'delete']));
+       
         $modelRoles= DB::table('role_has_permissions')->where('role_id', $request->id)->get();
-        
-        // dd($modelRoles->permission_id);
-        // dd($roles->hasPermissionTo($request->permission));
-        // if($request != null){
-        //     if($roles->hasPermissionTo($request->permission)){
-        //         return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
-        //     }
-        //     else{
-        //         $roles->givePermissionTo($request->permission);
-        //         return response()->json(['status'=>1, 'msg'=>'Permission added']);
-        //     }
-        // }
-        // else{
-        //     return response()->json(['status'=>1, 'msg'=>'Permission is null']);
-        // }
-        
+
         if($request->permission != null && $request->table_permission != null ){
             if($roles->hasPermissionTo($request->permission) && $roles->hasPermissionTo($request->table_permission)){
                 return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
             }
             else{
                 $roles->givePermissionTo($request->permission);
+                $roles->givePermissionTo($request->table_permission);
+                app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
                 return response()->json(['status'=>1, 'msg'=>'Permission added']);
             }
         }
@@ -159,6 +146,7 @@ class RoleController extends Controller
             }
             else{
                 $roles->givePermissionTo($request->table_permission);
+                app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
                 return response()->json(['status'=>1, 'msg'=>'New table permission added']);
             }
             
@@ -169,12 +157,14 @@ class RoleController extends Controller
             }
             else{
                 $roles->givePermissionTo($request->permission);
-                return response()->json(['status'=>0, 'msg'=>'Permission added']);
+                app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+                return response()->json(['status'=>1, 'msg'=>'Permission added']);
             }
         }
         else{
+
             if($roles->hasAnyPermission(['add', 'edit', 'details', 'delete'])){
-                return response()->json(['status'=>1, 'msg'=>'Updated']);
+                return response()->json(['status'=>1, 'msg'=>'Table permission is blank, Updated']);
             }
             else{
                 return response()->json(['status'=>1, 'msg'=>'Permission is null, Please add one']);
@@ -186,26 +176,28 @@ class RoleController extends Controller
     {
         $roles=Role::find($id)->delete();
         if($roles){
-            return redirect()->route('roles.index')->with('message', 'Item delete successful');
+            return response()->json(['status'=>1, 'msg'=>'Role delete successfully']);
         }
         else{
-            return redirect()->route('roles.index')->with('message', 'Item delete unsuccessful');
+            return response()->json(['status'=>1, 'msg'=>'Role not deleted']);
+            
         }
     }
 
-    // public function deletePermission($rid, $pid)
-    // {
-    //     // dd(Auth::user());
-    //     $roles = DB::table('role_has_permissions')
-    //                 ->where('role_id', $rid)
-    //                 ->where('permission_id', $pid)
-    //                 ->delete();
-    //     if($roles){
-    //         return redirect()->back();
-    //     }
-    //     else{
-    //         dd("Not deleted");
-    //     }
-    // }
+    public function deletePermission($rid, $pid)
+    {
+        
+        $roles = DB::table('role_has_permissions')
+                    ->where('role_id', $rid)
+                    ->where('permission_id', $pid)
+                    ->delete();
+        if($roles){
+            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+            return response()->json(['status'=>1, 'msg'=>'Permission deleted successfully']);
+        }
+        else{
+            return response()->json(['status'=>1, 'msg'=>'Permission not deleted']);
+        }
+    }
 
 }

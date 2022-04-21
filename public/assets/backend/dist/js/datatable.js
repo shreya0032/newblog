@@ -1,9 +1,10 @@
 $(document).ready(function () {
             var url = window.location.href;
+            console.log(url);
             var split = url.split('/');
             var lastseg = split.pop();
             // console.log(lastseg);
-            // console.log(url);
+            console.log(url);
             // axios.get('http://localhost/ecommerce/public/table/product/getrow')
             axios.get(url + '/getrow')
                 .then(function (response) {
@@ -30,11 +31,13 @@ $(document).ready(function () {
                     $('#example1').DataTable({
                         "processing": true,
                         "serverSide": true,
+                        "order": [
+                            [0, "asc"]
+                        ],
                         "ajax": url + '/get',
                         "language": {
-                            "searchPlaceholder": "None"
+                            "searchPlaceholder": "Search records"
                         },
-
                         "columns": dataTableRow,
                         dom: 'Bfrtip',
                         buttons: [{
@@ -70,7 +73,11 @@ $(document).ready(function () {
                     [0, "desc"]
                 ],
                 "search": {
-                    "caseInsensitive": false
+                    "caseInsensitive": false,
+                    
+                },
+                "language": {
+                    "searchPlaceholder": "Search records"
                 },
                 ajax: {
                     'url': "activity-log/getAjax",
@@ -78,11 +85,7 @@ $(document).ready(function () {
                     // 'headers': {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
 
                 },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        'orderable': false,
-                        'searchable': false
-                    },
+                columns: [
                     {
                         data: 'table_name'
                     },
@@ -105,20 +108,18 @@ $(document).ready(function () {
             $('#userlist').DataTable({
                     processing: true,
                     serverSide: true,
+                    rowReorder: true,
                     ajax: {
                         'url':'user-list-ajax',
                         'type': 'get'
                     },
                     language: {
-                        "searchPlaceholder": "None"
+                        "searchPlaceholder": "Search records"
                     },
-
+                    // "order": [
+                    //     [0, "asc"]
+                    // ],
                     "columns": [
-                        {
-                            data: "DT_RowIndex",
-                            orderable: false,
-                            searchable: false
-                        }, 
                         {
                             data: "name",
                         },
@@ -141,22 +142,21 @@ $(document).ready(function () {
             $('#rolelist').DataTable({
                     processing: true,
                     serverSide: true,
+                    "order": [
+                        [0, "asc"]
+                    ],
                     ajax: {
                         'url':'role-list-ajax',
                         'type': 'get'
                     },
                     language: {
-                        "searchPlaceholder": "None"
+                        "searchPlaceholder": "Search records"
                     },
 
                     "columns": [
                         {
-                            data: "DT_RowIndex",
-                            orderable: false,
-                            searchable: false
-                        }, 
-                        {
                             data: "name",
+                            
                         },
                         {
                             data: 'action',
@@ -178,15 +178,10 @@ $(document).ready(function () {
                         'type': 'get'
                     },
                     language: {
-                        "searchPlaceholder": "None"
+                        "searchPlaceholder": "Search records"
                     },
 
                     "columns": [
-                        {
-                            data: "DT_RowIndex",
-                            orderable: false,
-                            searchable: false
-                        }, 
                         {
                             data: "name",
                         },
@@ -210,28 +205,21 @@ $(document).ready(function () {
                         'type': 'get'
                     },
                     language: {
-                        "searchPlaceholder": "None"
+                        "searchPlaceholder": "Search records"
                     },
 
                     "columns": [
                         {
-                            data: "DT_RowIndex",
+                            data: "name",
+                        },
+                        {
+                            data: 'action',
+                            name: 'actions',
                             orderable: false,
                             searchable: false
-                        }, 
-                        {
-                            data: "name",
                         }
                     ]
 
                     });
-
-
-
-                    function testDeleteFunction(){
-                        console.log('testmsg');
-                    }
-
-
 
             })

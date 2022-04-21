@@ -10,6 +10,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
+
 class PermissionController extends Controller
 {
     public function index()
@@ -23,23 +24,21 @@ class PermissionController extends Controller
         $permissionList = DB::table('permissions')->whereIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
         return DataTables::of($permissionList)
             ->addIndexColumn()
-            // ->addColumn('action', function ($data){
-            //     $btn = '';
-            //     $btn = '<a href=" ' . route('permission.edit') . '/' . $data->id. ' " class="edit btn btn-primary btn-sm">Edit</a>';
-            //     $btn .=  '<a href=" ' . route('permission.delete') .' " class="delete btn btn-danger btn-sm deleteuser">Delete</a>';
-            //     return $btn;
-            // })
-
-            // ->rawColumns(['action'])
             ->make(true);
     }
 
     public function getTableList()
     {
-        $permissionTable = DB::table('permissions')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
+        $permissionTable = DB::table('permissions')->orderBy('id', 'asc')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
         // dd($permissionTable);
         return DataTables::of($permissionTable)
-            ->addIndexColumn()
+            ->addColumn('action', function ($data){
+                    $btn = '';
+                    $btn = '<a href=" ' . route('permission.edit', $data->id) .' " class="edit btn btn-primary btn-sm">Edit</a>';
+                    return $btn;
+                })
+    
+                ->rawColumns(['action'])
             ->make(true);
     }
     
@@ -49,17 +48,15 @@ class PermissionController extends Controller
     }
     
     public function store(Request $request)
-    {   
-        // $table = '';
-        // $tables = DB::connection('mysql2')->select('SHOW TABLES');
-        // foreach($tables as $table){
-        //     Permission::create($tables);
-        // }
-        // dd($request);
-
+    {  
         $values = $request->only('name');
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2|max:100|unique:permissions'
+        ], [
+            'name.required' => 'The permission name is required.',
+            'name.min' => 'The permission name must be at least 2 characters.',
+            'name.max' => 'The permission name cannot exit 100 characters',
+            'name.unique' => 'The permission name has already been taken',
         ]);
         
 
@@ -69,10 +66,6 @@ class PermissionController extends Controller
             $permission = new Permission;
             $permission->name = $values['name'];
             if ($permission->save()) {
-
-                $superAdmin = User::where('name', 'super admin')->first();
-                $superAdmin->givePermissionTo($permission->id);
-                
                 return response()->json(['status'=>1, 'msg'=>'New permission added successfully']);
             } else {
                 return response()->json(['status'=>0, 'msg'=>'Permission not added']);
@@ -96,14 +89,43 @@ class PermissionController extends Controller
 
     public function update(Request $request)
     {
-        $validated = $request->validate(['name' => ['required']]);
+        // $validated = $request->validate(['name' => ['required']]);
         
-        $permission = Permission::where('id', $request->id)->update($validated);
-        if($permission){
-            return redirect()->route('permission.index');
-        }
-        else{
-            return redirect()->back()->with('message', 'not updated');
+        // $permission = Permission::where('id', $request->id)->update($validated);
+        // if($permission){
+        //     return redirect()->route('permission.index');
+        // }
+        // else{
+        //     return redirect()->back()->with('message', 'not updated');
+        // }
+
+
+
+        $values = $request->only('name');
+        $validator = Validator::make($request->only('name'), [
+            'name' => 'required|min:2|max:100'
+        ],[
+            'name.required' => 'The permission name is required.',
+            'name.min' => 'The permission name must be at least 2 characters.',
+            'name.max' => 'The permission name cannot exit 100 characters',
+            'name.unique' => 'The permission name has already been taken',
+        ]);
+        
+
+        if ($validator->fails()) {
+           return response()->json(['status'=>0, 'error'=>$validator->errors()->toArray()]);
+        } else {
+            $permission = new Permission;
+            $permission->name = $values['name'];
+            if ($permission->save()) {
+
+                // $superAdmin = User::where('name', 'super admin')->first();
+                // $superAdmin->givePermissionTo($permission->id);
+                
+                return response()->json(['status'=>1, 'msg'=>'Permission updated successfully']);
+            } else {
+                return response()->json(['status'=>0, 'msg'=>'Permission not added']);
+            }
         }
 
     }
