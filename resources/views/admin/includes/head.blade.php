@@ -10,9 +10,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 @if ($lastSeg == "dashboard" || $lastSeg == "activity-log" )
-    <title>DBMS | {{ ucwords($lastSeg) }} </title>
+    <title>{{ config('app.name') }} {{ ucwords($lastSeg)}} </title>
 @else
-    <title>DBMS | {{ ucwords($urlArray[3]) }} | {{ ucwords($urlArray[4]) }}</title>
+    <title>{{ config('app.name') }} {{ ucwords($urlArray[3]) }} | {{ ucwords($urlArray[4]) }}</title>
 @endif
 
 
