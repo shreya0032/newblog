@@ -10,7 +10,6 @@
             <div class="card-header">
                 <h4 class="m-t-0 header-title font-weight-bold text-center">Update Permission </h4>
                
-                {{-- {{ dd($permission) }} --}}
             </div>
             <!-- /.card-header -->
 
@@ -23,7 +22,7 @@
                         <input type="hidden" name="id" value="{{ $permission->id }}">
                         <div class="form-group">
                             <label for="permission">Permission</label>
-                            <input type="text" id="permission" class="form-control" name="name" value={{ $permission->name }}>
+                            <input type="text" id="permission" class="form-control" name="name" value="{{ $permission->name }}">
                             <span class="text-danger error-text name_error"></span>
                             
                         </div>

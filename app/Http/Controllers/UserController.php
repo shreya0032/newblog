@@ -125,12 +125,13 @@ class UserController extends Controller
                     
                     }else {
                         User::where('id', $request->id)->update($values);
+                        // return response()->json(['status' => 1, 'msg' => 'User updated successfully']);
                         return response()->json(['status' => 1, 'msg' => 'User updated successfully']);
                     }
                 }else {
                     
                     User::where('id', $request->id)->update($values);
-                    return response()->json(['status' => 1, 'msg' => 'User updated successfully']);
+                    return response()->json(['status' => 1, 'msg' => 'User updated successfullyyyyyy']);
                 }
             }
             else {
@@ -138,7 +139,7 @@ class UserController extends Controller
                     $user->assignRole($request->roles);
                     return response()->json(['status' => 1, 'msg' => 'Role assigned']);
                 }else{
-                    return response()->json(['status' => 1, 'msg' => 'Role cannot be null']);
+                    return response()->json(['status' => 0, 'msg' => 'Role cannot be null']);
                 }
                 
             }

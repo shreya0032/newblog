@@ -15,7 +15,6 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            {{-- <h2>ss</h2> --}}
             <!-- /.card-header -->
             <div class="card-header">
                 <h4 class="m-t-0 header-title font-weight-bold text-center">Add Permission </h4>

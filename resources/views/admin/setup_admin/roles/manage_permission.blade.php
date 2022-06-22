@@ -29,7 +29,7 @@
                         @if($role_permission->name == 'add' ||$role_permission->name == 'edit'|| $role_permission->name == 'details')
                         <button class="mr-3 rounded">
                                 <a href="" class="delete btn btn-info btn-sm link-light deleteper" data-type="delete"  title="Delete">
-                                    {{ $role_permission->name }}
+                                    "{{ $role_permission->name }}"
                                 </a>
                                 <i data-href="{{ route('roles.permission.delete', [$roles->id, $role_permission->id]) }}" class="fa fa-times deletePermission" aria-hidden="true" id=""  style="color: black;"></i>                                                
                             

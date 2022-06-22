@@ -16,14 +16,14 @@
 
             <!-- /.card-body -->
             <div class="card-body">
-                <a class= 'btn btn-dark' href="{{ route('roles.index') }}" role="button">Back</a>
+                <a class= 'btn btn-dark mb-3' href="{{ route('roles.index') }}" role="button">Back</a>
                     <form action="{{ route('roles.update') }}" method="POST"
                         id="updateRoleForm">
                         @csrf
                         <input type="hidden" name="id" value="{{ $roles->id }}">
                         <div class="form-group">
                             <label for="permission">Role Name</label>
-                            <input type="text" id="permission" class="form-control" name="name" value={{ $roles->name }}>
+                            <input type="text" id="permission" class="form-control" name="name" value="{{ $roles->name }}">
                             <span class="text-danger error-text name_error"></span>                                 
                         </div>
                         <div class="form-group">

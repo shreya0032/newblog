@@ -36,7 +36,7 @@
                 <div class="mt-4">
                     <div class="pull-right">
                         <a class="btn btn-dark" href="{{ route('permission.create') }}"><i
-                                class="ion-plus-circled"></i> Add New Permission</a>
+                                class="ion-plus-circled"></i> Add New Table</a>
                     </div>
                 </div>
                 <div class="mt-4">

@@ -28,6 +28,7 @@
                     width="100%">
                     <thead>
                         <tr>
+                            <th><input type="checkbox"></th>
                             <th>Roles</th>
                             <th>Action</th>
 

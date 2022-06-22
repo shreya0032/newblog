@@ -1,3 +1,9 @@
+@php
+
+    $urlArray = explode('/', url()->current());
+    // dd($urlArray[3]);
+@endphp 
+ 
  <!-- Navbar -->
  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
      <!-- Left navbar links -->
@@ -5,132 +11,105 @@
          <li class="nav-item">
              <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
          </li>
-         <li class="nav-item d-none d-sm-inline-block">
+         {{-- <li class="nav-item d-none d-sm-inline-block">
              <a href="{{ route('home') }}" class="nav-link">home</a>
-         </li>
-        
+         </li> --}}
+         
      </ul>
 
      <!-- Right navbar links -->
      <ul class="navbar-nav ml-auto">
-         <!-- Navbar Search -->
-         <li class="nav-item">
-             <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                 <i class="fas fa-search"></i>
-             </a>
-             <div class="navbar-search-block">
-                 <form class="form-inline">
-                     <div class="input-group input-group-sm">
-                         <input class="form-control form-control-navbar" type="search" placeholder="Search"
-                             aria-label="Search">
-                         <div class="input-group-append">
-                             <button class="btn btn-navbar" type="submit">
-                                 <i class="fas fa-search"></i>
-                             </button>
-                             <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                                 <i class="fas fa-times"></i>
-                             </button>
-                         </div>
-                     </div>
-                 </form>
+         <li class="nav-item dropdown">
+           
+            <a data-toggle="dropdown" href="#">
+                
+                    {{-- <img src="{{ asset('assets/backend/dist/img/default_avatar.jpg') }}"
+                class="user-img" alt="User Image"> --}}
+                
+                
+                <span class="hidden-xs">{{ ucwords(auth()->user()->name) }}</span>
+            </a>
+             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="{{ asset('assets/backend/dist/img/default_avatar.jpg') }}"
+                    class="user-img" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <h4>{{ ucwords(auth()->user()->name) }}</h4>
+                        <p class="text-muted">{{ auth()->user()->email }}</p>
+                        <a href="" class="btn btn-danger btn-rounded">Update Avatar</a>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-default">
+                    <i class="fas fa-user-edit mr-2"></i> Update My Profile
+                    
+                </a>                
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-lock mr-2"></i> Update Password
+                    
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                    
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
              </div>
+            
          </li>
 
-         <!-- Messages Dropdown Menu -->
-         <li class="nav-item dropdown">
-             <a class="nav-link" data-toggle="dropdown" href="#">
-                 <i class="far fa-comments"></i>
-                 <span class="badge badge-danger navbar-badge">3</span>
-             </a>
-             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                 <a href="#" class="dropdown-item">
-                     <!-- Message Start -->
-                     <div class="media">
-                         <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-                         <div class="media-body">
-                             <h3 class="dropdown-item-title">
-                                 Brad Diesel
-                                 <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                             </h3>
-                             <p class="text-sm">Call me whenever you can...</p>
-                             <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                         </div>
-                     </div>
-                     <!-- Message End -->
-                 </a>
-                 <div class="dropdown-divider"></div>
-                 <a href="#" class="dropdown-item">
-                     <!-- Message Start -->
-                     <div class="media">
-                         <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                         <div class="media-body">
-                             <h3 class="dropdown-item-title">
-                                 John Pierce
-                                 <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                             </h3>
-                             <p class="text-sm">I got your message bro</p>
-                             <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                         </div>
-                     </div>
-                     <!-- Message End -->
-                 </a>
-                 <div class="dropdown-divider"></div>
-                 <a href="#" class="dropdown-item">
-                     <!-- Message Start -->
-                     <div class="media">
-                         <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                         <div class="media-body">
-                             <h3 class="dropdown-item-title">
-                                 Nora Silvester
-                                 <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                             </h3>
-                             <p class="text-sm">The subject goes here</p>
-                             <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                         </div>
-                     </div>
-                     <!-- Message End -->
-                 </a>
-                 <div class="dropdown-divider"></div>
-                 <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-             </div>
-         </li>
-         <!-- Notifications Dropdown Menu -->
-         <li class="nav-item dropdown">
-             <a class="nav-link" data-toggle="dropdown" href="#">
-                 <i class="far fa-bell"></i>
-                 <span class="badge badge-warning navbar-badge">15</span>
-             </a>
-             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                 <span class="dropdown-item dropdown-header">15 Notifications</span>
-                 <div class="dropdown-divider"></div>
-                 <a href="#" class="dropdown-item">
-                     <i class="fas fa-envelope mr-2"></i> 4 new messages
-                     <span class="float-right text-muted text-sm">3 mins</span>
-                 </a>
-                 <div class="dropdown-divider"></div>
-                 <a href="#" class="dropdown-item">
-                     <i class="fas fa-users mr-2"></i> 8 friend requests
-                     <span class="float-right text-muted text-sm">12 hours</span>
-                 </a>
-                 <div class="dropdown-divider"></div>
-                 <a href="#" class="dropdown-item">
-                     <i class="fas fa-file mr-2"></i> 3 new reports
-                     <span class="float-right text-muted text-sm">2 days</span>
-                 </a>
-                 <div class="dropdown-divider"></div>
-                 <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-             </div>
-         </li>
-         <li class="nav-item">
-             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                 <i class="fas fa-expand-arrows-alt"></i>
-             </a>
-         </li>
-         <li class="nav-item">
-             <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
-                 <i class="fas fa-th-large"></i>
-             </a>
-         </li>
 
      </ul>
  </nav>
+
+ <div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Update My Profile</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{-- <p>One fine body&hellip;</p> --}}
+          <form action="{{ route('user.update') }}" method="POST" id="updateUserForm">
+            {{-- updateUserForm --}}
+            @csrf
+            <input type="hidden" name="id" value="{{ auth()->user()->id }}">
+            
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" class="form-control" name="name" value="{{ auth()->user()->name }}">
+                <span class="text-danger error-text name_error"></span>
+
+            </div>
+
+
+            <div class="form-group">
+                <label for="email">User Email</label>
+                <input type="text" id="email" class="form-control" name="email" value="{{ auth()->user()->email }}">
+                <span class="text-danger error-text email_error"></span>
+
+            </div>
+            <div class="form-group">
+                <button type="submit" id="submitUpdateForm" class="btn btn-primary btn-block">Update</button>
+            </div>
+        </form>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>

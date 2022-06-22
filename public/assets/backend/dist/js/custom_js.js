@@ -6,9 +6,6 @@ $('document').ready(function () {
         submitForm = $(this);
         submitBtn = $(this).find('#submitUserForm');
         submitBtnLoader = $(this).find('#loaderSubmitUserForm');
-        // submitBtn.hide();
-        // submitBtnLoader.show();
-
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -18,9 +15,6 @@ $('document').ready(function () {
             processData: false,
             contentType: false,
             beforeSend: function () {
-                // submitBtn.attr("disabled", "disabled")
-                // submitBtnLoader.show();
-                // $(document).find('span.error-text').text('');
                 submitBtn.attr("disabled", "disabled").text('Please wait...');
             },
             success: function (data) {
@@ -112,7 +106,7 @@ $('document').ready(function () {
             success: function (data) {
                 submitBtn.attr("disabled", false).text('Update');
                 if (data.status == 0) {
-                    console.log(data.error);
+                    // console.log(data.error);
                     $.each(data.error, function (prefix, val) {
                         $('span.' + prefix + '_error').text(val[0])
                     })
@@ -121,7 +115,8 @@ $('document').ready(function () {
                     $('#updateUserForm')[0].reset();
 
                     alert(data.msg);
-                    window.location.reload();
+                    // window.location.reload();
+                    window.location.href = "index";
                     // reloadDatatable.ajax.reload(null, false);
                 }
             }
@@ -370,7 +365,7 @@ $('document').ready(function () {
                 } else {
                     $('#updatePermission')[0].reset();
                     alert(data.msg);
-                    window.location.reload();
+                    window.location.href = "index";
                 }
             }
 
