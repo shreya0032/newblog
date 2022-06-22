@@ -21,6 +21,7 @@ class AdminSeeder extends Seeder
             'name' => 'super admin',
             'email' => 'superadmin@gmail.com',
             'email_verified_at' => now(),
+            'avatar' => 'default_avatar.jpg',
             'password' => '$2y$10$qARVUqGQVi95jS0HBSdzeuNLEpbKULJ7js.Q2ylqJS4t5VGYLFTHm', // password
             
         ])->assignRole('super admin');

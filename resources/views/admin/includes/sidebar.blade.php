@@ -14,16 +14,6 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <img src="{{ asset('assets/backend/dist/img/default_avatar.jpg') }}"
-                    class="img-circle" alt="User Image">
-            </div>
-            <div class="info">
-                <a href="#" class="d-block"><b>{{ ucwords(auth()->user()->name) }}</b></a>
-            </div>
-        </div>
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -40,7 +30,7 @@
                 @role('super admin')
                     <li class="nav-item ">
                         <a href="{{ route('user.index') }}" class="nav-link ">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <i class="nav-icon fas fa-user"></i>
                             <p>
                                 User
                             </p>
@@ -107,7 +97,7 @@
                 @role('super admin')
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-table"></i>
+                            <i class="nav-icon fas fa-cogs"></i>
                             <p>
                                 Admin SetUp
                                 <i class="fas fa-angle-left right"></i>

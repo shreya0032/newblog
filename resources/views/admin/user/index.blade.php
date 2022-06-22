@@ -17,28 +17,21 @@
             <!-- /.card-body -->
             <div class="card-body">
 
-                {{-- <div class="btn-group pull-left  m-t-15">
-                    @if(auth()->user()->can('add'))
-                    <a href="{{ route('user.create') }}" class="btn addBtn waves-effect waves-light"><i
-                            class="ion-plus-circled"></i> Create New User
-                    </a>
-                    @endif
-                </div> --}}
+                
                 <div class="pull-right">
                     <a class="btn btn-dark" href="{{ route('user.create') }}"><i
                             class="ion-plus-circled"></i> Create New User </a>
                 </div>
-                 
-                {{-- @if(auth()->user()->can('detail')) --}}
                 <div class="mt-4">
                     <table id="userlist"
                         class="table tableStyle table-bordered table-bordered dt-responsive nowrap" cellspacing="0"
                         width="100%">
                         <thead>
                             <tr>
+                                <th><input type="checkbox" name="all_checkboxUser"></th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Action</th>
+                                <th>Action <button class="btn btn-sm btn-danger d-none" id="deleteAllUser">Delete All</button></th>
                             </tr>
                         </thead>
                         <tbody>

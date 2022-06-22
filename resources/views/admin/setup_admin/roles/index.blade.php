@@ -28,27 +28,12 @@
                     width="100%">
                     <thead>
                         <tr>
-                            <th><input type="checkbox"></th>
+                            <th><input type="checkbox" name="all_checkbox"></th>
                             <th>Roles</th>
-                            <th>Action</th>
+                            <th>Action <button class="btn btn-sm btn-danger d-none" id="deleteAll">Delete All</button> </th>
 
                         </tr>
                     </thead>
-                    {{-- @foreach($roles as $item )
-                    <tbody>
-                        
-                           <td>{{ $item->id }}</td>
-                           <td>{{ $item->name }}</td>
-                        
-                            <td>
-                                <a href="{{ route('roles.edit', $item->id) }}" class="edit btn btn-primary btn-sm">Edit</a>
-                                <a href="{{ route('roles.delete', $item->id) }}" class="edit btn btn-danger btn-sm">Delete</a>
-                                <a href="{{ route('roles.permission', $item->id) }}" class="edit btn btn-success btn-sm">Manage Permission</a>
-                            </td>
-                           
-                    </tbody>
-                    @endforeach --}}
-
                     <tbody>
 
                     </tbody>

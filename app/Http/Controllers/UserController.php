@@ -39,8 +39,11 @@ class UserController extends Controller
                 $btn .= '<a href="JavaScript:void(0);" data-action="' . route('user.delete') . '/' . $data->id . '" data-type="delete" class="delete btn btn-danger btn-sm mr-3 deleteuser" title="Delete">Delete</a>';
                 return $btn;
             })
-            // ->addColumn()
-            ->rawColumns(['action'])
+            ->addColumn('checkbox', function($data){
+                return '<input type="checkbox" name="single_checkboxUser" data-id="'.$data->id.'" />';
+                 
+            })
+            ->rawColumns(['action', 'checkbox'])
             ->make(true);
     }
 
@@ -59,11 +62,22 @@ class UserController extends Controller
             'email' => 'required|email:rfc,dns|max:100|unique:users',
             'password' => 'required|min:8',
             'confirmPassword' => 'required|same:password|min:8',
-            'roles' => 'required'
+            'roles' => 'required',
+            'avatar' => 'mimes:jpg,jpeg,png'
         ], [
             'confirmPassword.same' => "The confirm password and password doesn't match.",
             "roles.required" => 'Please assign a role.'
         ]);
+
+        // if($request->hasfile('avatar')){
+        //     $avatar = $request->file('avatar');
+        //     $filename = time() . '.' . $avatar->getClientOriginalExtension();
+        //     $filepath = public_path('assets/backend/dist/img/upload/' . $filename);
+        //     $avatar->move($filepath,$filename);
+        // }else{
+        //     $filename = 'default_avatar.jpg';
+        // }
+
         if ($validator->fails()) {
             // return redirect()->back()->withErrors($validator)->with('error', 'Validation failed')->withInput();
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
@@ -72,6 +86,7 @@ class UserController extends Controller
             $user->name = $values['name'];
             $user->email = $values['email'];
             $user->password = Hash::make($values['password']);
+            $user->avatar = 'default_avatar.jpg';
             
             
             if ($user->save()) {
@@ -101,7 +116,15 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:2|max:100|regex:/[a-zA-Z0-9\s]+/',
             'email' => 'required|email:rfc,dns',
+            'avatar'=> 'mimes:jpg,jpeg,png|max:5000'
         ]);
+
+        if($request->hasfile('avatar')){
+            $avatar = $request->file('avatar');
+            $filename = time() . '.' . $avatar->getClientOriginalExtension();
+            $filepath = public_path('assets/backend/dist/img/upload/' . $filename);
+            $avatar->move($filepath,$filename);
+        }
         
         if($validator->fails()){
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);

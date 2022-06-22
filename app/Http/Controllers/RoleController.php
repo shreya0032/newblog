@@ -35,7 +35,11 @@ class RoleController extends Controller
                 $btn .= '<a href="'. route('roles.permission', $data->id) .' " class="edit btn btn-success btn-sm">Manage Permission</a>';
                 return $btn;
             })
-            ->rawColumns(['action'])
+            ->addColumn('checkbox', function($data){
+                return '<input type="checkbox" name="single_checkbox" data-id="'.$data->id.'" />';
+                 
+            })
+            ->rawColumns(['action', 'checkbox'])
             ->make(true);
     }
 
@@ -184,6 +188,18 @@ class RoleController extends Controller
         }
     }
 
+    public function deleteSelected($id)
+    {
+        $roles=Role::find($id)->delete();
+        if($roles){
+            return response()->json(['status'=>1, 'msg'=>'Role delete successfully']);
+        }
+        else{
+            return response()->json(['status'=>0, 'msg'=>'Role not deleted']);
+            
+        }
+    }
+
     public function deletePermission($rid, $pid)
     {
         
@@ -196,7 +212,7 @@ class RoleController extends Controller
             return response()->json(['status'=>1, 'msg'=>'Permission deleted successfully']);
         }
         else{
-            return response()->json(['status'=>1, 'msg'=>'Permission not deleted']);
+            return response()->json(['status'=>0, 'msg'=>'Permission not deleted']);
         }
     }
 

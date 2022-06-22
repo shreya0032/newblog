@@ -79,10 +79,7 @@
 
                         <div class="form-group col-md-12">
                             <button type="submit" id="submitUserForm" class="btn btn-primary btn-block">Submit</button>
-                            {{-- <button class="btn btn-primary" id="loaderSubmitUserForm" type="button" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Loading...
-                              </button> --}}
+                            
                         </div>
                 </form>
             </div>
