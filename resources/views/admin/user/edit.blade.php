@@ -5,23 +5,17 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <!-- /.card-header -->
             <div class="card-header">
                 <h4 class="m-t-0 header-title font-weight-bold text-center">Update User </h4>
                 <a class= 'btn btn-dark' href="{{ route('user.index') }}" role="button">Back</a>
-            </div>
-            <!-- /.card-header -->
-
-            <!-- /.card-body -->
             <div class="card-body">
-                <form action="{{ route('user.update') }}" method="POST" id="updateUserForm">
-                    {{-- updateUserForm --}}
+                <form action="{{ route('user.update') }}" method="POST" id="updateUserForm" data-redirecturl="{{ route('user.index')}}">
+                   
                     @csrf
                     <input type="hidden" name="id" value="{{ $user->id }}">
                     
                     <div class="form-group">
                         <label for="name">User Name</label>
-                        {{-- {{ dd($user->name) }} --}}
                         <input type="text" id="name" class="form-control" name="name" value="{{ $user->name }}">
                         <span class="text-danger error-text name_error"></span>
 

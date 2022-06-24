@@ -73,8 +73,7 @@
             </div>
             <div class="modal-body">
                 {{-- <p>One fine body&hellip;</p> --}}
-                <form action="{{ route('user.update') }}" method="POST" id="updateUserForm">
-                    {{-- updateUserForm --}}
+                <form action="{{ route('user.profile') }}" method="POST" id="updateUserProfile">
                     @csrf
                     <input type="hidden" name="id" value="{{ auth()->user()->id }}">
 
@@ -103,7 +102,7 @@
                 
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
-                <button type="submit" id="submitUpdateForm" class="btn btn-primary">Update</button>
+                <button type="submit" form="updateUserProfile" id="submitUserProfile" class="btn btn-primary">Update</button>
                 
             </div>
         </div>
@@ -123,7 +122,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('user.update') }}" method="POST" id="updateUserForm" enctype="multipart/form-data">
+                <form action="{{ route('user.profile') }}" method="POST" id="updateUserProfile" enctype="multipart/form-data">
                    
                     @csrf
                     <input type="hidden" name="id" value="{{ auth()->user()->id }}">
@@ -135,16 +134,13 @@
                             <input type="file" class="custom-file-input" id="exampleInputFile" name="avatar">
                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                           </div>
-                          <div class="input-group-append">
-                            <span class="input-group-text">Upload</span>
-                          </div>
                         </div>
                       </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button"  class="btn btn-primary">Save changes</button>
+                <button type="button" form="updateUserProfile"  class="btn btn-primary">Upload</button>
             </div>
         </div>
         <!-- /.modal-content -->

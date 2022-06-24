@@ -18,6 +18,7 @@
             <div class="card-body">
                 <a class= 'btn btn-dark mb-3' href="{{ route('roles.index') }}" role="button">Back</a>
                     <form action="{{ route('roles.update') }}" method="POST"
+                              data-redirecturl="{{ route('roles.index')}}"
                         id="updateRoleForm">
                         @csrf
                         <input type="hidden" name="id" value="{{ $roles->id }}">

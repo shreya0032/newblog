@@ -20,6 +20,7 @@ class RoleController extends Controller
 
     public function getRoleList()
     {
+
         $roleList = DB::table('roles')->orderBy('id', 'desc')->whereNotIn('name', ['super admin'])->select('id', 'name')->get();
         
         $roleHasPermission = DB::table('roles')->whereNotIn('name', ['super admin'])
@@ -29,14 +30,17 @@ class RoleController extends Controller
         
         return DataTables::of($roleList)
             ->addColumn('action', function ($data){
+                $dataArray = [
+                    'id' => encrypt($data->id),
+                ];
                 $btn = '';
-                $btn = '<a href=" ' . route('roles.edit', $data->id) . ' " class="edit btn btn-primary btn-sm mr-3">Edit</a>';
-                $btn .=  '<a href="JavaScript:void(0);" data-action="' . route('roles.delete') . '/' . $data->id . '" data-type="delete" class="delete btn btn-danger btn-sm mr-3 deleterole" title="Delete">Delete</a>';
-                $btn .= '<a href="'. route('roles.permission', $data->id) .' " class="edit btn btn-success btn-sm">Manage Permission</a>';
+                $btn = '<a href=" ' . route('roles.edit', $dataArray['id']) . ' " class="edit btn btn-primary btn-sm mr-3">Edit</a>';
+                $btn .=  '<a href="JavaScript:void(0);" data-action="' . route('roles.delete') . '/' . $dataArray['id'] . '" data-type="delete" class="delete btn btn-danger btn-sm mr-3 deleterole" title="Delete">Delete</a>';
+                $btn .= '<a href="'. route('roles.permission', $dataArray['id']) .' " class="edit btn btn-success btn-sm">Manage Permission</a>';
                 return $btn;
             })
             ->addColumn('checkbox', function($data){
-                return '<input type="checkbox" name="single_checkbox" data-id="'.$data->id.'" />';
+                return '<input type="checkbox" name="single_checkbox" class="checkBoxClass" data-id="'.$data->id.'" />';
                  
             })
             ->rawColumns(['action', 'checkbox'])
@@ -81,6 +85,7 @@ class RoleController extends Controller
 
     public function edit($id)
     {
+        $id = decrypt($id);
         $roles = Role::findOrFail($id);
         return view('admin.setup_admin.roles.edit', compact('roles'));
     }
@@ -114,7 +119,7 @@ class RoleController extends Controller
     public function managePermission($id)
     {
         // $roleId = Role::pluck('id');
-    
+        $id = decrypt($id);
         $roles= Role::where('id', $id)->first();
         // dd($roles->permissions);
         $permissionView = DB::table('permissions')->whereIn('name', ['add', 'edit', 'details'])->get();
@@ -188,10 +193,11 @@ class RoleController extends Controller
         }
     }
 
-    public function deleteSelected($id)
+    public function deleteSelected(Request $request)
     {
-        $roles=Role::find($id)->delete();
-        if($roles){
+        $checked_roles_id=$request->checked_roles_ids;
+        $checkedDeleted = Role::whereIn('id', $checked_roles_id)->delete();
+        if($checkedDeleted){
             return response()->json(['status'=>1, 'msg'=>'Role delete successfully']);
         }
         else{

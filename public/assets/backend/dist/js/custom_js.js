@@ -6,6 +6,7 @@ $('document').ready(function () {
         submitForm = $(this);
         submitBtn = $(this).find('#submitUserForm');
         submitBtnLoader = $(this).find('#loaderSubmitUserForm');
+        var url=$(this).data('redirecturl');
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -26,8 +27,15 @@ $('document').ready(function () {
                     })
                 } else {
                     $('#createUserForm')[0].reset();
-                    alert(data.msg);
-                    window.location.href = "index";
+                    $.toast({
+                        text:data.msg,
+                        showHideTransition: 'slide',
+                        icon: 'success',
+                        hideAfter: 10000,
+                        stack:3,
+                        position: 'top-right'
+                    })
+                    window.location.href = url;
                     // setTimeout(function () {
                     //     window.location.href = "{{route('user.index')}}";
                     //   }, 2 * 1000);
@@ -61,7 +69,7 @@ $('document').ready(function () {
 
     function toggleBtnUser() {
         if ($('input[name="single_checkboxUser"]').length > 0) {
-            $('button#deleteAllUser').text('Delete(' + $('input[name="single_checkboxUser"]:checked').length + ')').removeClass('d-none')
+            $('button#deleteAllUser').text('Delete').removeClass('d-none')
         } else {
             $('button#deleteAllUser').addClass('d-none')
         }
@@ -73,7 +81,7 @@ $('document').ready(function () {
             checkedUser.push($(this).data('id'))
 
         })
-        var url = '';
+        var url = 'delete/selected';
         if (checkedUser.length > 0) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -85,12 +93,20 @@ $('document').ready(function () {
                 confirmButtonText: 'Yes, delete it!'
             }).then(function (result) {
                 if (result.value) {
-                    $.get(url, {
-                        countries_ids: checkedUser
+                    $.post(url, {
+                        checked_user: checkedUser,
+                        _token: $('[name="_token"]').val(),
                     }, function (data) {
                         if (data.status == 1) {
                             $('#userlist').DataTable().ajax.reload(null, true);
-                            toastr.success(data.msg);
+                            $.toast({
+                                    text:data.msg,
+                                    showHideTransition: 'slide',
+                                    icon: 'success',
+                                    hideAfter: 10000,
+                                    stack:3,
+                                    position: 'top-right'
+                                })
                         }
                     }, 'json');
                 }
@@ -117,7 +133,7 @@ $('document').ready(function () {
         event.preventDefault();
         submitForm = $(this);
         submitBtn = $(this).find('#submitUpdateForm');
-        // reloadDatatable = $('#userlist').DataTable();
+        var url=$(this).data('redirecturl');
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -133,18 +149,22 @@ $('document').ready(function () {
             success: function (data) {
                 submitBtn.attr("disabled", false).text('Update');
                 if (data.status == 0) {
-                    // console.log(data.error);
+                   
                     $.each(data.error, function (prefix, val) {
                         $('span.' + prefix + '_error').text(val[0])
                     })
                 } else {
-                    // $('#updateUserForm')[0].reset();
                     $('#updateUserForm')[0].reset();
 
-                    alert(data.msg);
-                    // window.location.reload();
-                    window.location.href = "index";
-                    // reloadDatatable.ajax.reload(null, false);
+                    $.toast({
+                        text:data.msg,
+                        showHideTransition: 'slide',
+                        icon: 'success',
+                        hideAfter: 1000,
+                        stack:3,
+                        position: 'top-right'
+                    })
+                    window.location.href = url;
                 }
             }
 
@@ -169,14 +189,12 @@ $('document').ready(function () {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    //  window.location.replace(action);
 
                     $.ajax({
                         url: action,
                         type: 'get',
                         dataType: 'json',
                         beforeSend: function () {
-                            // loader(1);
                         },
                         success: function (msg) {
                             // loader(0);
@@ -200,11 +218,54 @@ $('document').ready(function () {
         }
     });
 
+    $('#updateUserProfile').on('submit', function (event) {
+        event.preventDefault();
+        submitForm = $(this);
+        submitBtn = $(this).find('#submitUserProfile');
+        // reloadDatatable = $('#userlist').DataTable();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            dataType: 'json',
+            data: new FormData(this),
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                submitBtn.attr("disabled", "disabled").text('Please wait..')
+                $(document).find('span.error-text').text('');
+            },
+            success: function (data) {
+                submitBtn.attr("disabled", false).text('Update');
+                if (data.status == 0) {
+                    $.each(data.error, function (prefix, val) {
+                        $('span.' + prefix + '_error').text(val[0])
+                    })
+                } else {
+                    
+                    $('#updateUserProfile')[0].reset();$.toast({
+                        text:data.msg,
+                        showHideTransition: 'slide',
+                        icon: 'success',
+                        hideAfter: 1000,
+                        stack:3,
+                        position: 'top-right'
+                    })
+                    
+                    window.location.href = "index";
+    
+                }
+            }
 
+        })
+
+
+    })
 
     $('#roleForm').on('submit', function (event) {
         submitForm = $(this);
         submitBtn = $(this).find('#roleSubmitBtn');
+        var url=$(this).data('redirecturl');
         event.preventDefault();
         $.ajax({
             url: $(this).attr('action'),
@@ -215,8 +276,6 @@ $('document').ready(function () {
             processData: false,
             contentType: false,
             beforeSend: function () {
-                // submitBtn.attr("disabled", "disabled")
-                // $(document).find('span.error-text').text('');
                 submitBtn.attr("disabled", "disabled").text('Please wait...');
             },
             success: function (data) {
@@ -228,9 +287,17 @@ $('document').ready(function () {
                     })
                 } else {
                     $('#roleForm')[0].reset();
-                    alert(data.msg);
-                    window.location.href = "roles/index";
+                    $.toast({
+                        text:data.msg,
+                        showHideTransition: 'slide',
+                        icon: 'success',
+                        hideAfter: 10000,
+                        stack:3,
+                        position: 'top-right'
+                    })
+                    window.location.href = url;
                     // reloadDatatable.ajax.reload(null, false);
+                    
                 }
             }
 
@@ -263,21 +330,23 @@ $('document').ready(function () {
 
     function toggleBtn() {
         if ($('input[name="single_checkbox"]').length > 0) {
-            $('button#deleteAll').text('Delete(' + $('input[name="single_checkbox"]:checked').length + ')').removeClass('d-none')
+            $('button#deleteAll').text('Delete').removeClass('d-none')
         } else {
             $('button#deleteAll').addClass('d-none')
         }
     }
 
-    $(document).on('click', 'button#deleteAll', function () {
-        var checkedUser = [];
+    $(document).on('click', 'button#deleteAll', function (e) {
+        e.preventDefault();
+        // var action = $(this).attr('data-action')
+        var checkedRoles = [];
         $('input[name="single_checkbox"]:checked').each(function () {
-            checkedUser.push($(this).data('id'))
+            checkedRoles.push($(this).data('id'))
 
         })
-        // alert(checkedUser);
-        var url = '{{route("roles.delete.selected")}}';
-        if (checkedUser.length > 0) {
+        // alert(checkedRoles);
+        var url = 'delete/selected';
+        if (checkedRoles.length > 0) {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -288,26 +357,57 @@ $('document').ready(function () {
                 confirmButtonText: 'Yes, delete it!'
             }).then(function (result) {
                 if (result.value) {
-                    $.get(url, {
-                        countries_ids: checkedUser
-                    }, function (data) {
-                        if (data.status == 1) {
-                            $('#rolelist').DataTable().ajax.reload(null, true);
-                            toastr.success(data.msg);
+                    console.log('ok');
+                    // $.post(url, {
+                    //     checked_roles_ids: checkedRoles,
+                    //     "_token": "{{ csrf_token() }}",
+                    // }, function (data) {
+
+
+
+                    //              console.log(data);
+                    //     if (data.status == 1) {
+                    //         // $('#rolelist').DataTable().ajax.reload(null, true);
+                    //         // toastr.success(data.msg);
+                    //     }
+                    // }, 'json');
+
+                    $.ajax({
+                        url: url,
+                        type: 'post',
+                        data:{
+                            checked_roles_ids: checkedRoles,
+                            _token: $('[name="_token"]').val(),
+                        },
+                        
+                        beforeSend: function () {
+                            // loader(1);
+                            
+                        },
+                        success: function (msg) {
+                            if (msg.status == 0) {
+                                // toaster(msg.title, msg.msg, msg.type);
+                            } else {
+                                // toaster(msg.title, msg.msg, msg.type);
+                                $('#rolelist').DataTable().ajax.reload(null, true);
+                            }
+                            setTimeout(function () {
+                                $("#alert").css('display', 'none');
+                            }, 5000);
                         }
-                    }, 'json');
+                    });
                 }
             })
         }
     })
 
-
-
-    // window.location = "//www.aspsnippets.com/";
     $('#updateRoleForm').on('submit', function (event) {
         submitForm = $(this);
         submitBtn = $(this).find('#updateRoleBtn');
         event.preventDefault();
+        // var url = "'roles/index'";
+        var url=$(this).data('redirecturl');
+        // console.log(url);
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -329,8 +429,15 @@ $('document').ready(function () {
                     })
                 } else {
                     $('#updateRoleForm')[0].reset();
-                    alert(data.msg);
-                    window.location.reload();
+                    $.toast({
+                        text:data.msg,
+                        showHideTransition: 'slide',
+                        icon: 'success',
+                        hideAfter: 10000,
+                        stack:3,
+                        position: 'top-right'
+                    })
+                    window.location.href=url;
                 }
             }
 
@@ -423,6 +530,7 @@ $('document').ready(function () {
     $('#updatePermission').on('submit', function (event) {
         submitForm = $(this);
         submitBtn = $(this).find('#updatePermissionBtn');
+        var url=$(this).data('redirecturl');
         event.preventDefault();
         $.ajax({
             url: $(this).attr('action'),
@@ -445,8 +553,15 @@ $('document').ready(function () {
                     })
                 } else {
                     $('#updatePermission')[0].reset();
-                    alert(data.msg);
-                    window.location.href = "index";
+                    $.toast({
+                        text:data.msg,
+                        showHideTransition: 'slide',
+                        icon: 'success',
+                        hideAfter: 10000,
+                        stack:3,
+                        position: 'top-right'
+                    })
+                    window.location.href = url;
                 }
             }
 
@@ -482,7 +597,14 @@ $('document').ready(function () {
                     })
                 } else {
                     $('#updateManagePermission')[0].reset();
-                    alert(data.msg);
+                    $.toast({
+                        text:data.msg,
+                        showHideTransition: 'slide',
+                        icon: 'success',
+                        hideAfter: 10000,
+                        stack:3,
+                        position: 'top-right'
+                    })
                     window.location.reload();
                     // reloadDatatable.ajax.reload(null, false);
 

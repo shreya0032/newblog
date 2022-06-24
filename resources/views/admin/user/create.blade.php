@@ -18,7 +18,7 @@
 
             <div class="card-body">
 
-                <form action="{{ route('user.store') }}" method="POST" id="createUserForm">
+                <form action="{{ route('user.store') }}" method="POST" id="createUserForm" data-redirecturl="{{ route('user.index')}}">
                     @csrf
                     <div class="row">
                         <div class="form-group col-md-12">

@@ -46,4 +46,6 @@
 
 <!-- ( LC Switch CDN ) -->
 <link href="{{ asset('assets/backend/plugins/LC-switch-master/lc_switch.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/backend/dist/js/toast/jquery.toast.min.css') }}" rel="stylesheet" />
+
 

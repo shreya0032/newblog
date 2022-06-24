@@ -7,6 +7,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
@@ -22,12 +23,8 @@ class AdminSeeder extends Seeder
             'email' => 'superadmin@gmail.com',
             'email_verified_at' => now(),
             'avatar' => 'default_avatar.jpg',
-            'password' => '$2y$10$qARVUqGQVi95jS0HBSdzeuNLEpbKULJ7js.Q2ylqJS4t5VGYLFTHm', // password
+            'password' => Hash::make('12345678'), 
             
         ])->assignRole('super admin');
-
-        
-        // $user->assignRole([$role->id]);
-
     }
 }

@@ -1,20 +1,13 @@
-@php
-    $dynamic_table = DB::connection('mysql2')->select('SHOW TABLES');
-@endphp
-
-
 @auth
 <aside class="main-sidebar sidebar-light-primary elevation-4">
-    <!-- Brand Logo -->
+   
     <a href="" class="brand-link">
         <img src="{{ asset('assets/backend/dist/img/onepatchnew.png') }}" alt="Onepatch Logo"
             class="brand-image" style="opacity: .8">
-        <span class="brand-text font-weight-bold">OnePatch DB Support</span>
+        <span class="brand-text">OnePatch DB Support</span>
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
@@ -39,7 +32,7 @@
                 @endrole
 
                 @role('super admin')
-                    <li class="nav-item menu-open">
+                    <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-table "></i>
                             <p>
@@ -65,8 +58,7 @@
 
                     </li>
                 @else
-                {{-- <h4>ss</h4> --}}
-                    <li class="nav-item menu-open">
+                    <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-table "></i>
                             <p>
@@ -134,10 +126,6 @@
             </ul>
 
         </nav>
-        <!-- /.sidebar-menu -->
     </div>
-    <!-- /.sidebar -->
 </aside>
 @endauth
-
-{{-- @endif --}}

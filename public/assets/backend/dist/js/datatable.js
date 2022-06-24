@@ -100,6 +100,9 @@ $(document).ready(function () {
             {
                 data: 'present_info'
             },
+            {
+                data: 'created_by'
+            }
         ]
     });
 

@@ -87,6 +87,7 @@ class TableController extends Controller
     public function tableSave(Request $request, $tableName)
     {
         try{
+            
             $values = $request->except('_token');
 
             if ( !empty(array_filter($values))) {
@@ -98,6 +99,7 @@ class TableController extends Controller
                         'description' => 'add',
                         'role_id' => auth()->user()->id,
                         'present_info' => json_encode([$values]),
+                        'created_by' => auth()->user()->name
 
                     ]);
                     return redirect()->route('table.show', $tableName);
@@ -147,6 +149,7 @@ class TableController extends Controller
                         'previous_info' => json_encode($tabledata),
                         'present_info' => json_encode([$values]),
                         'role_id' => auth()->user()->id,
+                        'created_by' => auth()->user()->name
                         ]);
                     return redirect()->route('table.show', $tableName);
                 }else{
@@ -212,12 +215,7 @@ class TableController extends Controller
         }
     }
 
-    // public function filterResult($tableName){
 
-    //     $columns = Schema::Connection('mysql2')->getColumnListing($tableName);
-    //     return view('admin.table.tableFilter', compact('columns'));
-
-    // }
 
     public function activityLog()
     {
@@ -226,7 +224,8 @@ class TableController extends Controller
 
     public function getactivityLog()
     {
-        $userActivity = DB::table('log_activities')->leftJoin('roles', 'roles.id', '=', 'log_activities.role_id')->select('table_name', 'description', 'roles.name as role_name', 'previous_info', 'present_info')->get();
+        $userActivity = DB::table('log_activities')->leftJoin('roles', 'roles.id', '=', 'log_activities.role_id')->select('table_name', 'description', 'roles.name as role_name', 'previous_info', 'present_info', 'created_by')->get();
+        
         return DataTables::of($userActivity)
             ->addIndexColumn()
             ->addColumn('table_name', function ($data) {
@@ -285,7 +284,10 @@ class TableController extends Controller
 
                 return $present_info_row;
             })
-            ->rawColumns(['table_name', 'description', 'present_info', 'previous_info', 'role_name'])
+            ->addColumn('created_by', function ($data) {
+                return $data->created_by;
+            })
+            ->rawColumns(['table_name', 'description', 'present_info', 'previous_info', 'role_name','created_by'])
             ->make(true);
     }
 }

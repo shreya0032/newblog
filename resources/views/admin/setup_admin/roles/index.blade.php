@@ -1,7 +1,7 @@
 @extends('admin.layout.app')
 @section('content')
 
-
+{{-- @csrf --}}
 <div class="row">
     <div class="col-12">
 
@@ -28,9 +28,9 @@
                     width="100%">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" name="all_checkbox"></th>
+                            <th><input type="checkbox" name="all_checkbox" id="checkAll"></th>
                             <th>Roles</th>
-                            <th>Action <button class="btn btn-sm btn-danger d-none" id="deleteAll">Delete All</button> </th>
+                            <th>Action <button type="button" class="btn btn-sm btn-danger d-none" id="deleteAll">Delete All</button> </th>
 
                         </tr>
                     </thead>

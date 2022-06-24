@@ -15,7 +15,7 @@
 
             <!-- /.card-body -->
             <div class="card-body">
-                    <form action="{{ route('roles.store') }}" method="POST" id="roleForm">
+                    <form action="{{ route('roles.store') }}" method="POST" data-redirecturl="{{ route('roles.index')}}" id="roleForm">
                         @csrf
                         <div class="form-group">
                             <label for="role">Role</label>

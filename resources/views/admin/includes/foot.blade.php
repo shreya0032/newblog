@@ -71,6 +71,8 @@
 <!-- ( LC Switch CDN ) -->
 <script src="{{ asset('assets/backend/plugins/LC-switch-master/lc_switch.js') }}" type="text/javascript"></script>
 
+<script src="{{ asset('assets/backend/dist/js/toast/jquery.toast.min.js') }}" type="text/javascript"></script>
+
 <script>    
     (function($) {
         'use strict';

@@ -20,6 +20,7 @@ class CreateLogActivities extends Migration
             $table->string('previous_info')->nullable();
             $table->string('present_info')->nullable();
             $table->unsignedBigInteger('role_id');
+            $table->string('created_by');
             $table->timestamps();
         });
     }

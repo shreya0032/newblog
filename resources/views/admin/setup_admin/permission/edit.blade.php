@@ -17,7 +17,7 @@
             <div class="card-body">
                 <a class= 'btn btn-dark mb-3' href="{{ route('permission.index') }}" role="button">Back</a>
                     <form action="{{ route('permission.update') }}" method="POST"
-                        id="updatePermission">
+                        id="updatePermission" data-redirecturl="{{ route('permission.index') }}">
                         @csrf
                         <input type="hidden" name="id" value="{{ $permission->id }}">
                         <div class="form-group">

@@ -17,7 +17,7 @@
        
         <a class="btn btn-dark" href="{{ route('roles.index') }}">Back </a>
         <form method="POST" action="{{ route('roles.permission.update') }}"
-            id="updateManagePermission">
+            id="updateManagePermission" data-redirecturl="">
             @csrf
 
             <input type="hidden" name="id" value="{{ $roles->id }}">

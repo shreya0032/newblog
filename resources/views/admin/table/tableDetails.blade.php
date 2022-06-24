@@ -1,15 +1,3 @@
-@php
-
-    $urls = url()->current();
-    $url = explode('/', $urls);
-    $count = sizeOf($url);
-    $tableName = $url[$count-1];
-
-    // $columns = DB::getSchemaBuilder()->getColumnListing($tableName);
-    // dd($columns);
-
-@endphp
-
 @extends('admin.layout.app')
 
 @section('content')
@@ -35,7 +23,7 @@
                             href="{{ route('filter', $tableName) }}">Filter</a>
         
                     </div>
-                    {{-- table tableStyle table-bordered table-bordered dt-responsive nowrap dataTable --}}
+
                     <div class="mt-4">
                         
                         <table id="example1"
@@ -63,11 +51,7 @@
                                             
                                                 <a class="edit btn btn-primary btn-sm mr-3"
                                                     href="{{ route('product.edit', [$tableName, $item->id]) }}">Edit</a>
-                                            
-                                            {{-- @if(auth()->user()->can('delete'))
-                                            <a class="delete btn btn-danger btn-sm"
-                                                href="{{ route('product.delete', [$tableName, $item->id]) }}">Delete</a>
-                                @endif--}}
+                                           
                                 </td>
                                 </tr>
                 @endforeach

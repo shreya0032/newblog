@@ -67,7 +67,7 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::get('/roles/edit/{id?}', [RoleController::class, 'edit'])->name('roles.edit');
     Route::post('/roles/update', [RoleController::class, 'update'])->name('roles.update');
     Route::get('/roles/delete/{id?}', [RoleController::class, 'delete'])->name('roles.delete');
-    Route::get('/roles/delete/selected/{id?}', [RoleController::class, 'deleteSelected'])->name('roles.delete.selected');
+    Route::post('/roles/delete/selected', [RoleController::class, 'deleteSelected'])->name('roles.delete.selected');
     Route::get('/roles/manage-permission/{id?}', [RoleController::class, 'managePermission'])->name('roles.permission');
     Route::post('/roles/update/manage-permission', [RoleController::class, 'updatePermission'])->name('roles.permission.update');
     Route::get('/roles/delete/manage-permission/{rid?}/{pid?}', [RoleController::class, 'deletePermission'])->name('roles.permission.delete');
@@ -94,6 +94,8 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::post('/user/update', [UserController::class, 'update'])->name('user.update');
     // Route::post('/user/{id?}/roles/{id?}/delete', [UserController::class, 'userRoleDelete'])->name('user.role.delete');
     Route::get('/user/delete/{id?}', [UserController::class, 'delete'])->name('user.delete');
+    Route::post('/user/delete/selected', [UserController::class, 'deleteUserSelected'])->name('user.delete.selected');
+    Route::post('/user/profile/', [UserController::class, 'userProfile'])->name('user.profile');
     });
 
 });
