@@ -19,6 +19,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('onepatch.ico') }}" rel="shortcut icon">
 </head>
 <body>
     <div id="app">

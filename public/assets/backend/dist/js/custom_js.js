@@ -247,12 +247,12 @@ $('document').ready(function () {
                         text:data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
-                        hideAfter: 1000,
+                        hideAfter: 10000,
                         stack:3,
                         position: 'top-right'
                     })
                     
-                    window.location.href = "index";
+                    window.location.reload();
     
                 }
             }
