@@ -231,12 +231,12 @@ $(document).ready(function () {
         "columns": [{
                 data: "name",
             },
-            {
-                data: 'action',
-                name: 'actions',
-                orderable: false,
-                searchable: false
-            }
+            // {
+            //     data: 'action',
+            //     name: 'actions',
+            //     orderable: false,
+            //     searchable: false
+            // }
         ]
 
     });

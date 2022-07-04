@@ -118,14 +118,10 @@ class RoleController extends Controller
 
     public function managePermission($id)
     {
-        // $roleId = Role::pluck('id');
         $id = decrypt($id);
         $roles= Role::where('id', $id)->first();
-        // dd($roles->permissions);
         $permissionView = DB::table('permissions')->whereIn('name', ['add', 'edit', 'details'])->get();
-        $permissionTable = DB::table('permissions')->whereNotIn('name', ['add', 'edit', 'details', 'delete'])->get();
-        // dd($permissionTable);
-        // dd($permissions);
+        $permissionTable = DB::table('permissions')->whereNotIn('name', ['add', 'edit', 'details', 'delete'])->get();       
         $tables = DB::connection('mysql2')->select('SHOW TABLES');
         
         return view('admin.setup_admin.roles.manage_permission', compact('roles','permissionView', 'permissionTable'));
@@ -183,6 +179,7 @@ class RoleController extends Controller
 
     public function delete($id)
     {
+        $id = decrypt($id);
         $roles=Role::find($id)->delete();
         if($roles){
             return response()->json(['status'=>1, 'msg'=>'Role delete successfully']);

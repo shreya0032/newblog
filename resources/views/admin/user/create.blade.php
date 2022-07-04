@@ -23,14 +23,13 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="name">Name</label>
-                            <input type="text" name="name" id="name" placeholder="name" class="form-control" value="">
+                            <input type="text" name="name" id="name" placeholder="Name" class="form-control" value="">
                             <span class="text-danger error-text name_error"></span>
                         </div>
             
                         <div class="form-group col-md-12" >
                             <label for="email">Email</label>
                             <input type="text" name="email" id="email" placeholder="Email" class="form-control" value="">
-                            {{-- <span role="alert" id="emailErr" style="color:red;font-size: 12px"></span> --}}
                             <span class="text-danger error-text email_error"></span>
                         </div>
             
@@ -66,9 +65,7 @@
                                 class="form-select" aria-label="Default select example">
                                 <option value=" ">Choose a role</option>
                                     @foreach($roles as $role)
-                                        @if ($role->name == "super admin")
-                                            {{-- <option value=""></option> --}}
-                                        @else
+                                        @if ($role->name != "super admin")
                                             <option value="{{ $role->name }}">{{ $role->name }}</option>
                                         @endif
                                             
@@ -78,8 +75,7 @@
                         </div>
 
                         <div class="form-group col-md-12">
-                            <button type="submit" id="submitUserForm" class="btn btn-primary btn-block">Submit</button>
-                            
+                            <button type="submit" id="submitUserForm" class="btn btn-primary btn-block">Submit</button>                            
                         </div>
                 </form>
             </div>

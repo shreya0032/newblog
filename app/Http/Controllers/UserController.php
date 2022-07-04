@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Activitylog\Models\Activity;
 use App\Helpers\LogActivity;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -109,13 +110,6 @@ class UserController extends Controller
             'email' => 'required|email:rfc,dns',
             'avatar'=> 'mimes:jpg,jpeg,png|max:5000'
         ]);
-
-        // if($request->hasfile('avatar')){
-        //     $avatar = $request->file('avatar');
-        //     $filename = time() . '.' . $avatar->getClientOriginalExtension();
-        //     $filepath = public_path('assets/backend/dist/img/upload/' . $filename);
-        //     $avatar->move($filepath,$filename);
-        // }
         
         if($validator->fails()){
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
@@ -160,13 +154,10 @@ class UserController extends Controller
         }
     }
 
-    public function userRoleDelete($userId, $roleId)
-    {
-        // dd($userId, $roleId);
-    }
 
     public function delete($id)
-    {  
+    { 
+        $id = decrypt($id); 
         $user = User::find($id)->delete();
         if ($user){
             return response()->json(['status'=>1, 'type' => "success", 'title' => "Delete", 'msg'=>'User delete successsfully']);
@@ -174,49 +165,8 @@ class UserController extends Controller
             return response()->json(['status'=>0, 'msg'=>'User not deleted']);
         }
     }
-
-    public function userProfile(Request $request)
+    public function deleteUserSelected(Request $request)
     {
-        // dd(User::find($request->id)->avatar);
-       
-        $values = $request->only('name', 'email');
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|min:2|max:100|regex:/[a-zA-Z0-9\s]+/',
-            'email' => 'required|email:rfc,dns',
-            'avatar'=> 'mimes:jpg,jpeg,png|max:5000'
-        ]);
-    
-
-        if($request->hasfile('avatar')){
-            if(User::find($request->id)->avatar == "default_avatar.jpg"){
-                $avatar = $request->file('avatar');
-                $filename = time() . '.' . $avatar->getClientOriginalExtension();
-                $filepath = public_path('assets/backend/dist/img/upload/' . $filename);
-                $avatar->move($filepath,$filename);
-                User::where('id', $request->id)->update($avatar);
-            }else{
-                $avatar = $request->file('avatar');
-                $filename = time() . '.' . $avatar->getClientOriginalExtension();
-                $filepath = public_path('assets/backend/dist/img/upload/' . $filename);
-                $avatar->move($filepath,$filename);
-                $existfilename = User::find($request->id)->avatar;
-                unlink($filepath,$existfilename);
-                User::where('id', $request->id)->update($avatar);
-            }
-            
-        }
-        
-        if($validator->fails()){
-            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
-        }
-        else{
-            User::where('id', $request->id)->update($values);
-            return response()->json(['status' => 1, 'msg' => 'User Profile updated successfully']);
-            // return redirect()->back();
-        }
-    }
-
-    public function deleteUserSelected(Request $request){
         $checked_users_id=$request->checked_user;
         $checkedDeleted = User::whereIn('id', $checked_users_id)->delete();
         if($checkedDeleted){
@@ -227,7 +177,60 @@ class UserController extends Controller
             
         }
 
+    } 
+
+
+    public function userProfile(Request $request)
+    {
+        
+        $values = $request->only('user_name', 'user_email');
+        $validator = Validator::make($request->all(), [
+            'user_name' => 'required|min:2|max:100|regex:/[a-zA-Z0-9\s]+/',
+            'user_email' => 'required|email:rfc,dns',
+        ]);
+        if($validator->fails()){
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        }
+        else{
+            User::where('id', $request->profile_id)->update(['name' => $values['user_name'], 'email' => $values['user_email']]);
+            return response()->json(['status' => 1, 'msg' => 'User Profile updated successfully']);                
+        }
+        
+        
+    }
+
+    public function userAvatar(Request $request)
+    {
+        $user = User::where('id', $request->id)->first();
+        $validator = Validator::make($request->all(), [
+            'avatar' => 'required|mimes:jpg,jpeg,png'
+        ],[
+            'avatar.required' => 'Please choose a file',
+        ]);
+            
+        if(!$validator->fails())
+        {
+            $image = $request->file('avatar');
+            $filename = time() . '-' . rand(1000, 9999) . '.' . $image->getClientOriginalExtension();
+            $image->move('assets/backend/dist/img/upload/',$filename);
+            if($user->avatar != "default_avatar.jpg"){
+                unlink(public_path('assets/backend/dist/img/upload/' . $user->avatar));
+                User::where('id', $request->id)->update(['avatar' => $filename]);
+            }else{
+                User::where('id', $request->id)->update(['avatar' => $filename]);
+            }
+            return response()->json(['status' => 1, 'msg' => 'User Profile Avatar updated successfully']);
+        }else{
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        }
+    }
+
+    public function getuserProfile($id)
+    { 
+        $user = User::where('id', $id)->first();
+        return response()->json(['status' =>1, 'user' => $user]);
+        // $username = $user->name;
+        // $useremail = $user->email;
     }
 }
 
- 

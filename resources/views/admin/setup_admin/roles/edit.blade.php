@@ -28,7 +28,7 @@
                             <span class="text-danger error-text name_error"></span>                                 
                         </div>
                         <div class="form-group">
-                            <button type="submit" id="updateRoleBtn" class="btn btn-primary btn-block">Submit</button>
+                            <button type="submit" id="updateRoleBtn" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
             </div>

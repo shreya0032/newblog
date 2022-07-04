@@ -23,27 +23,25 @@ class PermissionController extends Controller
     {
         $permissionList = DB::table('permissions')->whereIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
         return DataTables::of($permissionList)
-            ->addIndexColumn()
             ->make(true);
     }
 
     public function getTableList()
     {
-        $permissionTable = DB::table('permissions')->orderBy('id', 'asc')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
-        // dd($permissionTable);
-        return DataTables::of($permissionTable)
-            ->addColumn('action', function ($data){
-                    $btn = '';
-                    $btn = '<a href=" ' . route('permission.edit', $data->id) .' " class="edit btn btn-primary btn-sm">Edit</a>';
-                    return $btn;
-                })
+        $permissionTable = DB::table('permissions')->orderBy('id', 'asc')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();        return DataTables::of($permissionTable)
+            // ->addColumn('action', function ($data){
+            //         $btn = '';
+            //         $btn = '<a href=" ' . route('permission.edit', $data->id) .' " class="edit btn btn-primary btn-sm">Edit</a>';
+            //         return $btn;
+            //     })
     
-                ->rawColumns(['action'])
+            // ->rawColumns(['action'])
             ->make(true);
     }
     
     public function create()
     {
+        
         return view('admin.setup_admin.permission.create');
     }
     
@@ -56,7 +54,7 @@ class PermissionController extends Controller
             'name.required' => 'The permission name is required.',
             'name.min' => 'The permission name must be at least 2 characters.',
             'name.max' => 'The permission name cannot exit 100 characters',
-            'name.unique' => 'The permission name has already been taken',
+            'name.unique' => 'The table name for permission has already been taken',
         ]);
         
 
@@ -71,64 +69,42 @@ class PermissionController extends Controller
                 return response()->json(['status'=>0, 'msg'=>'Permission not added']);
             }
         }
-        // $validated = $request->validate(['name' => ['required', 'min:3']]);
-        // Permission::create($validated);
-        // return redirect()->route('permission.index');
     }
 
-    public function edit($id)
-    {
-        
-        // $permission = Permission::where('id', $id)->first();
-        $permission = Permission::findOrFail($id);
-        // dd($permission);
-        // dd($permission);
-        return view('admin.setup_admin.permission.edit', compact('permission'));
-    }
+    // public function edit($id)
+    // {
+    //     $permission = Permission::findOrFail($id);
+    //     return view('admin.setup_admin.permission.edit', compact('permission'));
+    // }
 
 
-    public function update(Request $request)
-    {
-        // $validated = $request->validate(['name' => ['required']]);
-        
-        // $permission = Permission::where('id', $request->id)->update($validated);
-        // if($permission){
-        //     return redirect()->route('permission.index');
-        // }
-        // else{
-        //     return redirect()->back()->with('message', 'not updated');
-        // }
-
-
-
-        $values = $request->only('name');
-        $validator = Validator::make($request->only('name'), [
-            'name' => 'required|min:2|max:100'
-        ],[
-            'name.required' => 'The permission name is required.',
-            'name.min' => 'The permission name must be at least 2 characters.',
-            'name.max' => 'The permission name cannot exit 100 characters',
-            'name.unique' => 'The permission name has already been taken',
-        ]);
+    // public function update(Request $request)
+    // {
+    //     $values = $request->only('name');
+    //     $validator = Validator::make($request->only('name'), [
+    //         'name' => 'required|min:2|max:100'
+    //     ],[
+    //         'name.required' => 'The permission name is required.',
+    //         'name.min' => 'The permission name must be at least 2 characters.',
+    //         'name.max' => 'The permission name cannot exit 100 characters',
+    //         'name.unique' => 'The permission name has already been taken',
+    //     ]);
         
 
-        if ($validator->fails()) {
-           return response()->json(['status'=>0, 'error'=>$validator->errors()->toArray()]);
-        } else {
-            $permission = new Permission;
-            $permission->name = $values['name'];
-            if ($permission->save()) {
-
-                // $superAdmin = User::where('name', 'super admin')->first();
-                // $superAdmin->givePermissionTo($permission->id);
+    //     if ($validator->fails()) {
+    //        return response()->json(['status'=>0, 'error'=>$validator->errors()->toArray()]);
+    //     } else {
+    //         $permission = new Permission;
+    //         $permission->name = $values['name'];
+    //         if ($permission->save()) {
                 
-                return response()->json(['status'=>1, 'msg'=>'Permission updated successfully']);
-            } else {
-                return response()->json(['status'=>0, 'msg'=>'Permission not added']);
-            }
-        }
+    //             return response()->json(['status'=>1, 'msg'=>'Permission updated successfully']);
+    //         } else {
+    //             return response()->json(['status'=>0, 'msg'=>'Permission not added']);
+    //         }
+    //     }
 
-    }
+    // }
 
 
 

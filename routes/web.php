@@ -33,6 +33,7 @@ Route::get('/dashboard', [HomeController::class, 'showDashboard'])->name('dashbo
 
 Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], function() {
 
+    
     // resources/views/admin/table/tableFilter.blade.php   
 
     /*===================Dynamic Table========================*/ 
@@ -53,11 +54,10 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
 
 
     /*===================Role========================*/ 
-    Route::group(['middleware' => 'role:super admin'], function() {
+    // Route::group(['middleware' => 'role:super admin'], function() {
 
     Route::get('/activity-log', [TableController::class, 'activityLog'])->name('activity_log');
     Route::get('/activity-log/getAjax', [TableController::class, 'getactivityLog'])->name('activity_log.show');
-    // Route::get('/activity-log/test', [TableController::class, 'getactivityLogtest'])->name('activity_log.test');
     
     
     Route::get('/roles/index', [RoleController::class, 'index'])->name('roles.index');
@@ -95,7 +95,11 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     // Route::post('/user/{id?}/roles/{id?}/delete', [UserController::class, 'userRoleDelete'])->name('user.role.delete');
     Route::get('/user/delete/{id?}', [UserController::class, 'delete'])->name('user.delete');
     Route::post('/user/delete/selected', [UserController::class, 'deleteUserSelected'])->name('user.delete.selected');
-    Route::post('/user/profile/', [UserController::class, 'userProfile'])->name('user.profile');
-    });
+    
+    // });
+
+    Route::get('user-profile-ajax/{id}', [UserController::class, 'getuserProfile']);
+    Route::post('profile', [UserController::class, 'userProfile'])->name('user.profile');
+    Route::post('avatar', [UserController::class, 'userAvatar'])->name('user.avatar');
 
 });

@@ -1,11 +1,9 @@
 $('document').ready(function () {
 
-
     $('#createUserForm').on('submit', function (event) {
         event.preventDefault();
         submitForm = $(this);
         submitBtn = $(this).find('#submitUserForm');
-        submitBtnLoader = $(this).find('#loaderSubmitUserForm');
         var url=$(this).data('redirecturl');
         $.ajax({
             url: $(this).attr('action'),
@@ -16,33 +14,36 @@ $('document').ready(function () {
             processData: false,
             contentType: false,
             beforeSend: function () {
-                submitBtn.attr("disabled", "disabled").text('Please wait...');
+                submitBtn.attr("disabled", "disabled").text('Please wait..')
+                $(document).find('span.error-text').text('');
             },
             success: function (data) {
                 submitBtn.attr("disabled", false).text('Submit');
                 if (data.status == 0) {
-                    // console.log('not ok');
+                   
                     $.each(data.error, function (prefix, val) {
                         $('span.' + prefix + '_error').text(val[0])
                     })
                 } else {
                     $('#createUserForm')[0].reset();
+
                     $.toast({
                         text:data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
-                        hideAfter: 10000,
+                        hideAfter: 2000,
                         stack:3,
                         position: 'top-right'
                     })
-                    window.location.href = url;
-                    // setTimeout(function () {
-                    //     window.location.href = "{{route('user.index')}}";
-                    //   }, 2 * 1000);
+                    window.setTimeout(function() {
+                        window.location.href = url;
+                    }, 2000);
                 }
             }
 
         })
+
+
     })
 
     $(document).on('click', 'input[name="all_checkboxUser"]', function (e) {
@@ -114,8 +115,6 @@ $('document').ready(function () {
         }
     })
 
-    
-
     $(".toggle-password").click(function () {
 
         $(this).toggleClass("fa-eye-slash fa-eye");
@@ -160,11 +159,81 @@ $('document').ready(function () {
                         text:data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
-                        hideAfter: 1000,
+                        hideAfter: 2000,
+                        position: 'top-right'
+                    })
+
+                    window.setTimeout(function() {
+                        window.location.href = url;
+                    }, 2000);
+                    
+                }
+            }
+
+        })
+
+
+    })
+
+    $('.profile').click(function(){
+        var id = $(this).data('id');
+        
+        $.ajax({
+            url: 'user-profile-ajax/'+id,
+            type: 'GET',
+            beforeSend: function () {
+                // submitBtn.attr("disabled", "disabled").text('Please wait..')
+                // $(document).find('span.error-text').text('');
+                // $('#loader').show();
+            },
+            success:function(data){
+                $('#loader').hide();
+                $('#username').val(data.user.name)
+                $('#useremail').val(data.user.email)
+                $('#profile_id').val(data.user.id)
+            }
+        })
+    })
+
+    $('#updateUserProfile').on('submit', function (event) {
+        event.preventDefault();
+        submitForm = $(this);
+        submitBtn = $(this).find('#submitUserProfile');
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            dataType: 'json',
+            data: new FormData(this),
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                submitBtn.attr("disabled", "disabled").text('Please wait..')
+                $(document).find('span.error-text').text('');
+            },
+            success: function (data) {
+                submitBtn.attr("disabled", false).text('Update');
+                if (data.status == 0) {
+                    $.each(data.error, function (prefix, val) {
+                        $('span.' + prefix + '_error').text(val[0])
+                    })
+                } else {
+                    
+                    $('#updateUserProfile')[0].reset();
+                    $.toast({
+                        text:data.msg,
+                        showHideTransition: 'slide',
+                        icon: 'success',
+                        hideAfter: 2000,
                         stack:3,
                         position: 'top-right'
                     })
-                    window.location.href = url;
+
+                    window.setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
+    
                 }
             }
 
@@ -218,11 +287,11 @@ $('document').ready(function () {
         }
     });
 
-    $('#updateUserProfile').on('submit', function (event) {
+
+    $('#updateUserAvatar').on('submit', function (event) {
         event.preventDefault();
         submitForm = $(this);
-        submitBtn = $(this).find('#submitUserProfile');
-        // reloadDatatable = $('#userlist').DataTable();
+        submitBtn = $(this).find('#submitUserAvatar');
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -243,16 +312,19 @@ $('document').ready(function () {
                     })
                 } else {
                     
-                    $('#updateUserProfile')[0].reset();$.toast({
+                    $('#updateUserAvatar')[0].reset();
+                    $.toast({
                         text:data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
-                        hideAfter: 10000,
+                        hideAfter: 2000,
                         stack:3,
                         position: 'top-right'
                     })
-                    
-                    window.location.reload();
+
+                    window.setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
     
                 }
             }
@@ -291,13 +363,13 @@ $('document').ready(function () {
                         text:data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
-                        hideAfter: 10000,
+                        hideAfter: 2000,
                         stack:3,
                         position: 'top-right'
                     })
-                    window.location.href = url;
-                    // reloadDatatable.ajax.reload(null, false);
-                    
+                    window.setTimeout(function() {
+                        window.location.href = url;
+                    }, 2000);
                 }
             }
 
@@ -433,11 +505,13 @@ $('document').ready(function () {
                         text:data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
-                        hideAfter: 10000,
+                        hideAfter: 2000,
                         stack:3,
                         position: 'top-right'
                     })
-                    window.location.href=url;
+                    window.setTimeout(function() {
+                        window.location.href = url;
+                    }, 2000);
                 }
             }
 
@@ -495,6 +569,7 @@ $('document').ready(function () {
     $('#permissionForm').on('submit', function (event) {
         submitForm = $(this);
         submitBtn = $(this).find('#submitPermissionBtn');
+        url=$(this).data('redirecturl');
         event.preventDefault();
         $.ajax({
             url: $(this).attr('action'),
@@ -511,64 +586,72 @@ $('document').ready(function () {
             success: function (data) {
                 submitBtn.attr("disabled", false).text('Submit');
                 if (data.status == 0) {
-                    // console.log('not ok');
                     $.each(data.error, function (prefix, val) {
                         $('span.' + prefix + '_error').text(val[0])
                     })
                 } else {
                     $('#permissionForm')[0].reset();
-                    alert(data.msg);
-                    window.location.href = "index";
-                }
-            }
-
-        })
-
-
-    })
-
-    $('#updatePermission').on('submit', function (event) {
-        submitForm = $(this);
-        submitBtn = $(this).find('#updatePermissionBtn');
-        var url=$(this).data('redirecturl');
-        event.preventDefault();
-        $.ajax({
-            url: $(this).attr('action'),
-            type: $(this).attr('method'),
-            dataType: 'json',
-            data: new FormData(this),
-            cache: false,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
-                submitBtn.attr("disabled", "disabled").text('Please wait..')
-                $(document).find('span.error-text').text('');
-            },
-            success: function (data) {
-                submitBtn.attr("disabled", false).text('Update');
-                if (data.status == 0) {
-                    // console.log('not ok');
-                    $.each(data.error, function (prefix, val) {
-                        $('span.' + prefix + '_error').text(val[0])
-                    })
-                } else {
-                    $('#updatePermission')[0].reset();
                     $.toast({
                         text:data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
-                        hideAfter: 10000,
+                        hideAfter: 2000,
                         stack:3,
                         position: 'top-right'
                     })
-                    window.location.href = url;
+                    window.setTimeout(function() {
+                        window.location.href = url;
+                    }, 2000);
                 }
             }
 
         })
-
-
     })
+
+    // $('#updatePermission').on('submit', function (event) {
+    //     submitForm = $(this);
+    //     submitBtn = $(this).find('#updatePermissionBtn');
+    //     var url=$(this).data('redirecturl');
+    //     event.preventDefault();
+    //     $.ajax({
+    //         url: $(this).attr('action'),
+    //         type: $(this).attr('method'),
+    //         dataType: 'json',
+    //         data: new FormData(this),
+    //         cache: false,
+    //         processData: false,
+    //         contentType: false,
+    //         beforeSend: function () {
+    //             submitBtn.attr("disabled", "disabled").text('Please wait..')
+    //             $(document).find('span.error-text').text('');
+    //         },
+    //         success: function (data) {
+    //             submitBtn.attr("disabled", false).text('Update');
+    //             if (data.status == 0) {
+    //                 // console.log('not ok');
+    //                 $.each(data.error, function (prefix, val) {
+    //                     $('span.' + prefix + '_error').text(val[0])
+    //                 })
+    //             } else {
+    //                 $('#updatePermission')[0].reset();
+    //                 // $.toast({
+    //                 //     text:data.msg,
+    //                 //     showHideTransition: 'slide',
+    //                 //     icon: 'success',
+    //                 //     hideAfter: 2000,
+    //                 //     stack:3,
+    //                 //     position: 'top-right'
+    //                 // })
+    //                 // window.setTimeout(function() {
+    //                 //     window.location.href = url;
+    //                 // }, 2000);
+    //             }
+    //         }
+
+    //     })
+
+
+    // })
 
     $('#updateManagePermission').on('submit', function (event) {
         submitForm = $(this);
@@ -597,22 +680,22 @@ $('document').ready(function () {
                     })
                 } else {
                     $('#updateManagePermission')[0].reset();
-                    $.toast({
+                   $.toast({
                         text:data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
-                        hideAfter: 10000,
+                        hideAfter: 2000,
                         stack:3,
                         position: 'top-right'
                     })
-                    window.location.reload();
-                    // reloadDatatable.ajax.reload(null, false);
-
+                    window.setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
                 }
             }
 
         })
-    });
+    })
 
     $('.deletePermission').on('click', function (event) {
         // console.log('ok');
@@ -654,10 +737,5 @@ $('document').ready(function () {
             }
         })
     })
-
-    
-
-
-
 
 });

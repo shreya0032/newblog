@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -19,10 +20,12 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         view()->composer('*', function ($view){
-            $dynamic_table = DB::connection('mysql2')->select('SHOW TABLES');
-            
-            View::share('dynamic_table', $dynamic_table);
-
+            $url = url()->current();
+            $url = explode("/", $url);
+            if(!in_array('login', $url)){
+                $dynamic_table = DB::connection('mysql2')->select('SHOW TABLES');
+                View::share('dynamic_table', $dynamic_table);
+            }
         });
     }
 

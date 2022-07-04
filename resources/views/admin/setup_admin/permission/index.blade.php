@@ -46,7 +46,7 @@
                         <thead>
                             <tr>
                                 <th>Table Name</th>
-                                <th>Action</th>
+                                {{-- <th>Action</th> --}}
                             </tr>
                         </thead>
 
