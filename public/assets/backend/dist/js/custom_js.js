@@ -175,17 +175,13 @@ $('document').ready(function () {
 
     })
 
-    $('.profile').click(function(){
+    $('.profile').click(function(e){
+        e.preventDefault();
         var id = $(this).data('id');
-        
+        var url = $(this).data('url');
         $.ajax({
-            url: 'user-profile-ajax/'+id,
+            url: url+'/'+id,
             type: 'GET',
-            beforeSend: function () {
-                // submitBtn.attr("disabled", "disabled").text('Please wait..')
-                // $(document).find('span.error-text').text('');
-                // $('#loader').show();
-            },
             success:function(data){
                 $('#loader').hide();
                 $('#username').val(data.user.name)

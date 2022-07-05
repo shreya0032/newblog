@@ -34,10 +34,9 @@
                 <div class="dropdown-divider"></div>
 
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item profile" data-toggle="modal" data-target="#modal-profile" data-id={{ auth()->user()->id }}>
-                    <i class="fas fa-user-edit mr-2"></i> Update My Profile
-                </a>
-
+                    <a href="#" class="dropdown-item profile" data-toggle="modal" data-target="#modal-profile" data-id={{ auth()->user()->id }} data-url={{ route('get.user.profile') }}>
+                        <i class="fas fa-user-edit mr-2"></i> Update My Profile
+                    </a>
                 <div class="dropdown-divider"></div>
                 
                 <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();

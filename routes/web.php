@@ -98,7 +98,7 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     
     // });
 
-    Route::get('user-profile-ajax/{id}', [UserController::class, 'getuserProfile']);
+    Route::get('user-profile-ajax/{id?}', [UserController::class, 'getuserProfile'])->name('get.user.profile');
     Route::post('profile', [UserController::class, 'userProfile'])->name('user.profile');
     Route::post('avatar', [UserController::class, 'userAvatar'])->name('user.avatar');
 

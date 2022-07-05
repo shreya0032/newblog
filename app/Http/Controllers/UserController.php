@@ -212,7 +212,7 @@ class UserController extends Controller
         {
             $image = $request->file('avatar');
             $filename = time() . '-' . rand(1000, 9999) . '.' . $image->getClientOriginalExtension();
-            $image->move('assets/backend/dist/img/upload/',$filename);
+            $image->move(public_path('assets/backend/dist/img/upload/'),$filename);
             if($user->avatar != "default_avatar.jpg"){
                 unlink(public_path('assets/backend/dist/img/upload/' . $user->avatar));
                 User::where('id', $request->id)->update(['avatar' => $filename]);
