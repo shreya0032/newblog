@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
-use Yajra\DataTables\Html\Button;
 use Illuminate\Http\Response;
 use Illuminate\Http\File;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,14 +14,16 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Contracts\Permission;
-use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Models\Activiy;
 use App\Helpers\LogActivity;
 use Exception;
 use Illuminate\Support\Facades\Session;
-
-use function PHPUnit\Framework\returnSelf;
+use PHPUnit\Framework\returnSelf;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
+use App\Models\User;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class TableController extends Controller
 {
@@ -39,9 +39,23 @@ class TableController extends Controller
 
     public function tableShow($tableName)
     {
-        $columns = Schema::Connection('mysql2')->getColumnListing($tableName);
-        $table_data = DB::connection('mysql2')->table($tableName)->paginate(5);
-        return view('admin.table.tableDetails', compact('columns', 'table_data', 'tableName'));
+
+        $id = (Auth::user()->id);
+        $user = User::where('id', $id)->first();
+
+        if (!$user->hasRole('super admin')) {
+            if ($user->hasAnyPermission([$tableName])) {
+                $columns = Schema::Connection('mysql2')->getColumnListing($tableName);
+                $table_data = DB::connection('mysql2')->table($tableName)->paginate(5);
+                return view('admin.table.tableDetails', compact('columns', 'table_data', 'tableName'));
+            } else {
+                throw UnauthorizedException::forPermissions([$tableName]);
+            }
+        } else {
+            $columns = Schema::Connection('mysql2')->getColumnListing($tableName);
+            $table_data = DB::connection('mysql2')->table($tableName)->paginate(5);
+            return view('admin.table.tableDetails', compact('columns', 'table_data', 'tableName'));
+        }
     }
 
 
@@ -58,7 +72,7 @@ class TableController extends Controller
         $this->table = $tableName;
         $user = auth()->user();
         $table_data = DB::connection('mysql2')->table($tableName);
-
+        // dd($table_data);
         $datatables =  Datatables::of($table_data)
             ->addColumn('action', function ($data) use ($user) {
                 $btn = '';
@@ -74,9 +88,6 @@ class TableController extends Controller
     }
 
 
-
-
-
     public function tableAdd($tableName)
     {
         $columnName = Schema::Connection('mysql2')->getColumnListing($tableName);
@@ -86,11 +97,10 @@ class TableController extends Controller
 
     public function tableSave(Request $request, $tableName)
     {
-        try{
-            
+        try {
             $values = $request->except('_token');
 
-            if ( !empty(array_filter($values))) {
+            if (!empty(array_filter($values))) {
                 $query = DB::connection('mysql2')->table($tableName)->insert($values);
 
                 if ($query) {
@@ -109,11 +119,9 @@ class TableController extends Controller
             } else {
                 return redirect()->back()->with('msg', 'Atleast one field is required');
             }
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             return redirect()->back()->with('msg', json_encode($e->getMessage(), true));
         }
-        
     }
 
 
@@ -127,20 +135,16 @@ class TableController extends Controller
     }
 
 
-
-
-
-
     public function updateTableList(Request $request, $tableName)
     {
-        try{
+        try {
             $values = $request->except('_token');
             $tabledata = DB::connection('mysql2')->table($tableName)->where('id', $values['id'])->get();
 
-            if ( !empty(array_filter($values))) {
+            if (!empty(array_filter($values))) {
                 $query = DB::connection('mysql2')->table($tableName)
-                        ->where('id', $values['id'])
-                        ->update($values);
+                    ->where('id', $values['id'])
+                    ->update($values);
 
                 if ($query) {
                     LogActivity::addToLog([
@@ -150,18 +154,49 @@ class TableController extends Controller
                         'present_info' => json_encode([$values]),
                         'role_id' => auth()->user()->id,
                         'created_by' => auth()->user()->name
-                        ]);
+                    ]);
                     return redirect()->route('table.show', $tableName);
-                }else{
+                } else {
                     return redirect()->back()->with('msg', 'error getting');
                 }
-            }else{
+            } else {
                 return redirect()->back()->with('msg', 'Atleast one field is required');
             }
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return redirect()->back()->with('msg', json_encode($e->getMessage(), true));
         }
     }
+
+
+    // public function updateTableList(Request $request, $tableName)
+    // {
+
+    //     $values = $request->except('_token');
+    //     $tabledata = DB::connection('mysql2')->table($tableName)->where('id', $values['id'])->get();
+
+    //     if (!empty(array_filter($values))) {
+    //         $query = DB::connection('mysql2')->table($tableName)
+    //             ->where('id', $values['id'])
+    //             ->update($values);
+    //         try {
+    //             if ($query) {
+    //                 LogActivity::addToLog([
+    //                     'table_name' => $tableName,
+    //                     'description' => 'update',
+    //                     'previous_info' => json_encode($tabledata),
+    //                     'present_info' => json_encode([$values]),
+    //                     'role_id' => auth()->user()->id,
+    //                     'created_by' => auth()->user()->name
+    //                 ]);
+    //                 return redirect()->route('table.show', $tableName);
+    //             }
+    //         } catch (Exception $e) {
+    //             return redirect()->back()->with('msg', json_encode($e->getMessage(), true));
+    //         }
+    //     } else {
+    //         return redirect()->back()->with('msg', 'Atleast one field is required');
+    //     }
+    // }
 
 
 
@@ -187,9 +222,9 @@ class TableController extends Controller
 
     public function filterSearch(Request $request, $tableName)
     {
-        if(empty(array_filter($request['select'])) ||empty(array_filter($request['column']))){
+        if (empty(array_filter($request['select'])) || empty(array_filter($request['column']))) {
             return redirect()->back()->with('msg', "Fill atleast one field");
-        }else{
+        } else {
             $columns = Schema::Connection('mysql2')->getColumnListing($tableName);
             $selects = $request['select'];
             $search_texts = $request['column'];
@@ -210,8 +245,7 @@ class TableController extends Controller
                     }
                 })->get();
 
-                return view('admin.table.tableDetails', compact('table_data', 'columns', 'tableName'));
-
+            return view('admin.table.tableDetails', compact('table_data', 'columns', 'tableName'));
         }
     }
 
@@ -225,7 +259,7 @@ class TableController extends Controller
     public function getactivityLog()
     {
         $userActivity = DB::table('log_activities')->leftJoin('roles', 'roles.id', '=', 'log_activities.role_id')->select('table_name', 'description', 'roles.name as role_name', 'previous_info', 'present_info', 'created_by')->get();
-        
+
         return DataTables::of($userActivity)
             ->addIndexColumn()
             ->addColumn('table_name', function ($data) {
@@ -287,7 +321,7 @@ class TableController extends Controller
             ->addColumn('created_by', function ($data) {
                 return $data->created_by;
             })
-            ->rawColumns(['table_name', 'description', 'present_info', 'previous_info', 'role_name','created_by'])
+            ->rawColumns(['table_name', 'description', 'present_info', 'previous_info', 'role_name', 'created_by'])
             ->make(true);
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController; 
 use App\Http\Controllers\TableController; 
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\PermissionMiddlware;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,12 +32,13 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/dashboard', [HomeController::class, 'showDashboard'])->name('dashboard');
 
-Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], function() {
+Route::group(['middleware' => ['auth']], function() {
 
     
     // resources/views/admin/table/tableFilter.blade.php   
 
     /*===================Dynamic Table========================*/ 
+    // Route::group(['middleware' => [PermissionMiddlware::class, 'users']], function() {
 
     Route::get('table/{table}', [TableController::class, 'tableShow'])->name('table.show')->middleware(['permission:details|add|edit']);
     Route::get('table/{table}/get', [TableController::class, 'getTableData'])->name('product.get')->middleware('permission:details');
@@ -51,10 +53,10 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     // Route::get('table/{table}/filter-result', function(){return view('admin.table.tableFilter');})->name('filter.result');
     Route::get('export/csv/{table}', [TableController::class, 'exportCsv'])->name('export.csv');
 
-
+    // });
 
     /*===================Role========================*/ 
-    // Route::group(['middleware' => 'role:super admin'], function() {
+    Route::group(['middleware' => 'role:super admin'], function() {
 
     Route::get('/activity-log', [TableController::class, 'activityLog'])->name('activity_log');
     Route::get('/activity-log/getAjax', [TableController::class, 'getactivityLog'])->name('activity_log.show');
@@ -83,6 +85,7 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::get('/permission/edit/{id?}', [PermissionController::class, 'edit'])->name('permission.edit');
     Route::post('/permission/update', [PermissionController::class, 'update'])->name('permission.update');
     Route::get('/permission/delete/{id?}', [PermissionController::class, 'delete'])->name('permission.delete');
+    Route::post('/permission/delete/selected', [PermissionController::class, 'deleteSelectedPermission'])->name('permission.delete.selected');
    
     // /*===================User========================*/ 
 
@@ -96,9 +99,10 @@ Route::group(['middleware' => ['auth' , 'permission:add|edit|delete|details']], 
     Route::get('/user/delete/{id?}', [UserController::class, 'delete'])->name('user.delete');
     Route::post('/user/delete/selected', [UserController::class, 'deleteUserSelected'])->name('user.delete.selected');
     
-    // });
+    });
 
     Route::get('user-profile-ajax/{id?}', [UserController::class, 'getuserProfile'])->name('get.user.profile');
+    // Route::get('profile-edit/{id?}', [UserController::class, 'getuserProfile'])->name('edit.user.profile');
     Route::post('profile', [UserController::class, 'userProfile'])->name('user.profile');
     Route::post('avatar', [UserController::class, 'userAvatar'])->name('user.avatar');
 

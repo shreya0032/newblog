@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 use Spatie\Permission\PermissionRegistrar;
+use App\Models\User;
 
 class RoleController extends Controller
 {

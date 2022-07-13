@@ -21,13 +21,19 @@
 @extends('admin.layout.app')
 
 @section('content')
-{{-- {{ dd($data) }} --}}
 <div class="row">
-    <div class="col-md-6">
-        <div class="card card-primary">
+    <div class="col-12">
+        <div class="card">
             <div class="card-header">
-                <h3 class="card-title">General</h3>
+                {{-- <h3 class="card-title ">--}}
+                    <div class="card-title btn-group pull-left  m-t-15">
+                        <a href="{{ route('table.show', $lastSeg) }}" class="btn btn-dark"> Back </a>
+                    </div>
+                {{--</h3> --}}
+                <h4 class="m-t-0 header-title font-weight-bold text-center">Update {{ ucfirst($lastSeg) }}</h4>
+                
             </div>
+            
             <div class="card-body">
                 @if (Session::get('msg'))
                     <div class="alert alert-danger">
@@ -38,10 +44,8 @@
                     
                 @endif
                 <form id="updateAdminForm" action="{{ route('product.update', $lastSeg) }}" method="POST"
-                    enctype="multipart/form-data">
-                    
+                    enctype="multipart/form-data">                    
                     @csrf
-
                     <input type="hidden" name="id" value="{{ $data->id }}">
                     @foreach( $data as $items => $item )
                         <div class="form-group">
@@ -57,12 +61,10 @@
                         </div>
                     @endforeach
                     <div class="form-group">
-                        <button type="submit" id="submitBtn" class="btn btn-primary btn-block">Update</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary">Update</button>
                     </div>
             </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
     </div>
 </div>
 

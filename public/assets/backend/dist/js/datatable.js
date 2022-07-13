@@ -3,12 +3,9 @@ $(document).ready(function () {
     console.log(url);
     var split = url.split('/');
     var lastseg = split.pop();
-    // console.log(lastseg);
     console.log(url);
-    // axios.get('http://localhost/ecommerce/public/table/product/getrow')
     axios.get(url + '/getrow')
         .then(function (response) {
-            console.log(response.data);
             let data = response.data;
             let dataTableRow = []
             data.map((res) => {
@@ -25,7 +22,6 @@ $(document).ready(function () {
                 searchable: false
             }
             dataTableRow.push(action)
-            console.log(dataTableRow);
 
 
             $('#example1').DataTable({
@@ -229,16 +225,28 @@ $(document).ready(function () {
         },
 
         "columns": [{
+            data: "checkbox",
+            orderable: false,
+            searchable: false
+            },
+            {
                 data: "name",
             },
-            // {
-            //     data: 'action',
-            //     name: 'actions',
-            //     orderable: false,
-            //     searchable: false
-            // }
+            {
+                data: 'action',
+                name: 'actions',
+                orderable: false,
+                searchable: false
+            }
         ]
 
+    }).on('draw', function(){
+        $('input[name="permission_singlechkbx"]').each(function(){
+            this.checked = false;
+        })
+        $('input[name="permission_allchkbx"]').prop('checked', false)
+        $('button#permissionDeleteAll').addClass('d-none')
     });
+    
 
 })

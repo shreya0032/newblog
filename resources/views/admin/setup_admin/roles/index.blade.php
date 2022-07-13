@@ -30,7 +30,7 @@
                         <tr>
                             <th><input type="checkbox" name="all_checkbox" id="checkAll"></th>
                             <th>Roles</th>
-                            <th>Action <button type="button" class="btn btn-sm btn-danger d-none" id="deleteAll">Delete All</button> </th>
+                            <th>Action <button type="button" class="btn btn-sm btn-danger d-none" id="deleteAll" data-url="{{ route('roles.delete.selected') }}">Delete All</button> </th>
 
                         </tr>
                     </thead>

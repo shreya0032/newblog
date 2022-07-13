@@ -4,7 +4,7 @@ $('document').ready(function () {
         event.preventDefault();
         submitForm = $(this);
         submitBtn = $(this).find('#submitUserForm');
-        var url=$(this).data('redirecturl');
+        var url = $(this).data('redirecturl');
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -20,7 +20,7 @@ $('document').ready(function () {
             success: function (data) {
                 submitBtn.attr("disabled", false).text('Submit');
                 if (data.status == 0) {
-                   
+
                     $.each(data.error, function (prefix, val) {
                         $('span.' + prefix + '_error').text(val[0])
                     })
@@ -28,14 +28,14 @@ $('document').ready(function () {
                     $('#createUserForm')[0].reset();
 
                     $.toast({
-                        text:data.msg,
+                        text: data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
                         hideAfter: 2000,
-                        stack:3,
+                        stack: 3,
                         position: 'top-right'
                     })
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         window.location.href = url;
                     }, 2000);
                 }
@@ -82,7 +82,7 @@ $('document').ready(function () {
             checkedUser.push($(this).data('id'))
 
         })
-        var url = 'delete/selected';
+        var url = $(this).data('url');
         if (checkedUser.length > 0) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -101,13 +101,13 @@ $('document').ready(function () {
                         if (data.status == 1) {
                             $('#userlist').DataTable().ajax.reload(null, true);
                             $.toast({
-                                    text:data.msg,
-                                    showHideTransition: 'slide',
-                                    icon: 'success',
-                                    hideAfter: 10000,
-                                    stack:3,
-                                    position: 'top-right'
-                                })
+                                text: data.msg,
+                                showHideTransition: 'slide',
+                                icon: 'success',
+                                hideAfter: 2000,
+                                stack: 3,
+                                position: 'top-right'
+                            })
                         }
                     }, 'json');
                 }
@@ -132,7 +132,7 @@ $('document').ready(function () {
         event.preventDefault();
         submitForm = $(this);
         submitBtn = $(this).find('#submitUpdateForm');
-        var url=$(this).data('redirecturl');
+        var url = $(this).data('redirecturl');
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -148,7 +148,8 @@ $('document').ready(function () {
             success: function (data) {
                 submitBtn.attr("disabled", false).text('Update');
                 if (data.status == 0) {
-                   
+                    console.log(data);
+
                     $.each(data.error, function (prefix, val) {
                         $('span.' + prefix + '_error').text(val[0])
                     })
@@ -156,17 +157,17 @@ $('document').ready(function () {
                     $('#updateUserForm')[0].reset();
 
                     $.toast({
-                        text:data.msg,
+                        text: data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
                         hideAfter: 2000,
                         position: 'top-right'
                     })
 
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         window.location.href = url;
                     }, 2000);
-                    
+
                 }
             }
 
@@ -175,20 +176,28 @@ $('document').ready(function () {
 
     })
 
-    $('.profile').click(function(e){
+    $('.profile').click(function (e) {
         e.preventDefault();
         var id = $(this).data('id');
         var url = $(this).data('url');
+        $('.error-text').text('');
+       
         $.ajax({
-            url: url+'/'+id,
+            url: url + '/' + id,
             type: 'GET',
-            success:function(data){
-                $('#loader').hide();
+            success: function (data) {
                 $('#username').val(data.user.name)
                 $('#useremail').val(data.user.email)
-                $('#profile_id').val(data.user.id)
+                $('#profile_id').val(id)
             }
         })
+    })
+    
+    
+    $('.avatar').click(function (e) {
+        e.preventDefault();
+        $('.error-text').text('');  
+        $('#avatar_file').val('')     ;
     })
 
     $('#updateUserProfile').on('submit', function (event) {
@@ -206,7 +215,8 @@ $('document').ready(function () {
             contentType: false,
             beforeSend: function () {
                 submitBtn.attr("disabled", "disabled").text('Please wait..')
-                $(document).find('span.error-text').text('');
+                $(document).find('span.error-text').text('');                
+
             },
             success: function (data) {
                 submitBtn.attr("disabled", false).text('Update');
@@ -215,29 +225,28 @@ $('document').ready(function () {
                         $('span.' + prefix + '_error').text(val[0])
                     })
                 } else {
-                    
+
                     $('#updateUserProfile')[0].reset();
                     $.toast({
-                        text:data.msg,
+                        text: data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
                         hideAfter: 2000,
-                        stack:3,
+                        stack: 3,
                         position: 'top-right'
                     })
 
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         window.location.reload();
                     }, 2000);
-    
+
                 }
             }
 
         })
-
-
     })
 
+    
     $('body').delegate('#userlist .deleteuser', 'click', function () {
         var type = $(this).attr('data-type')
         var id = $(this).attr('data-id')
@@ -259,19 +268,18 @@ $('document').ready(function () {
                         url: action,
                         type: 'get',
                         dataType: 'json',
-                        beforeSend: function () {
-                        },
-                        success: function (msg) {
-                            // loader(0);
-                            if (msg.status == 0) {
-                                // toaster(msg.title, msg.msg, msg.type);
-                            } else {
-                                // toaster(msg.title, msg.msg, msg.type);
+                        beforeSend: function () {},
+                        success: function (data) {
+                            if (data.status != 0) {
                                 reloadDatatable.ajax.reload(null, false);
                             }
-                            setTimeout(function () {
-                                $("#alert").css('display', 'none');
-                            }, 5000);
+                            $.toast({
+                                text: data.msg,
+                                showHideTransition: 'slide',
+                                icon: 'success',
+                                hideAfter: 2000,
+                                position: 'top-right'
+                            })
                         }
                     });
 
@@ -288,6 +296,7 @@ $('document').ready(function () {
         event.preventDefault();
         submitForm = $(this);
         submitBtn = $(this).find('#submitUserAvatar');
+        
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -307,21 +316,21 @@ $('document').ready(function () {
                         $('span.' + prefix + '_error').text(val[0])
                     })
                 } else {
-                    
+
                     $('#updateUserAvatar')[0].reset();
                     $.toast({
-                        text:data.msg,
+                        text: data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
                         hideAfter: 2000,
-                        stack:3,
+                        stack: 3,
                         position: 'top-right'
                     })
 
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         window.location.reload();
                     }, 2000);
-    
+
                 }
             }
 
@@ -333,7 +342,7 @@ $('document').ready(function () {
     $('#roleForm').on('submit', function (event) {
         submitForm = $(this);
         submitBtn = $(this).find('#roleSubmitBtn');
-        var url=$(this).data('redirecturl');
+        var url = $(this).data('redirecturl');
         event.preventDefault();
         $.ajax({
             url: $(this).attr('action'),
@@ -356,14 +365,14 @@ $('document').ready(function () {
                 } else {
                     $('#roleForm')[0].reset();
                     $.toast({
-                        text:data.msg,
+                        text: data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
                         hideAfter: 2000,
-                        stack:3,
+                        stack: 3,
                         position: 'top-right'
                     })
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         window.location.href = url;
                     }, 2000);
                 }
@@ -412,8 +421,7 @@ $('document').ready(function () {
             checkedRoles.push($(this).data('id'))
 
         })
-        // alert(checkedRoles);
-        var url = 'delete/selected';
+        var url = $(this).data('url');
         if (checkedRoles.length > 0) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -424,46 +432,24 @@ $('document').ready(function () {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
             }).then(function (result) {
+
                 if (result.value) {
-                    console.log('ok');
-                    // $.post(url, {
-                    //     checked_roles_ids: checkedRoles,
-                    //     "_token": "{{ csrf_token() }}",
-                    // }, function (data) {
-
-
-
-                    //              console.log(data);
-                    //     if (data.status == 1) {
-                    //         // $('#rolelist').DataTable().ajax.reload(null, true);
-                    //         // toastr.success(data.msg);
-                    //     }
-                    // }, 'json');
-
-                    $.ajax({
-                        url: url,
-                        type: 'post',
-                        data:{
-                            checked_roles_ids: checkedRoles,
-                            _token: $('[name="_token"]').val(),
-                        },
-                        
-                        beforeSend: function () {
-                            // loader(1);
-                            
-                        },
-                        success: function (msg) {
-                            if (msg.status == 0) {
-                                // toaster(msg.title, msg.msg, msg.type);
-                            } else {
-                                // toaster(msg.title, msg.msg, msg.type);
-                                $('#rolelist').DataTable().ajax.reload(null, true);
-                            }
-                            setTimeout(function () {
-                                $("#alert").css('display', 'none');
-                            }, 5000);
+                    $.post(url, {
+                        checked_roles_ids: checkedRoles,
+                        _token: $('[name="_token"]').val(),
+                    }, function (data) {
+                        if (data.status == 1) {
+                            $('#rolelist').DataTable().ajax.reload(null, true);
+                            $.toast({
+                                text: data.msg,
+                                showHideTransition: 'slide',
+                                icon: 'success',
+                                hideAfter: 2000,
+                                stack: 3,
+                                position: 'top-right'
+                            })
                         }
-                    });
+                    }, 'json');
                 }
             })
         }
@@ -474,7 +460,7 @@ $('document').ready(function () {
         submitBtn = $(this).find('#updateRoleBtn');
         event.preventDefault();
         // var url = "'roles/index'";
-        var url=$(this).data('redirecturl');
+        var url = $(this).data('redirecturl');
         // console.log(url);
         $.ajax({
             url: $(this).attr('action'),
@@ -498,14 +484,14 @@ $('document').ready(function () {
                 } else {
                     $('#updateRoleForm')[0].reset();
                     $.toast({
-                        text:data.msg,
+                        text: data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
                         hideAfter: 2000,
-                        stack:3,
+                        stack: 3,
                         position: 'top-right'
                     })
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         window.location.href = url;
                     }, 2000);
                 }
@@ -530,33 +516,27 @@ $('document').ready(function () {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    //  window.location.replace(action);
-
                     $.ajax({
                         url: action,
                         type: 'get',
                         dataType: 'json',
-                        beforeSend: function () {
-                            // loader(1);
-                        },
-                        success: function (msg) {
+                        success: function (data) {
                             // loader(0);
-                            if (msg.status == 0) {
-                                // toaster(msg.title, msg.msg, msg.type);
-                            } else {
-                                // toaster(msg.title, msg.msg, msg.type);
+                            if (data.status != 0) {
                                 reloadDatatable.ajax.reload(null, false);
                             }
-                            setTimeout(function () {
-                                $("#alert").css('display', 'none');
-                            }, 5000);
+                            $.toast({
+                                text: data.msg,
+                                showHideTransition: 'slide',
+                                icon: 'success',
+                                hideAfter: 2000,
+                                position: 'top-right'
+                            })
                         }
                     });
 
                 }
             })
-
-        } else {
 
         }
     });
@@ -565,7 +545,7 @@ $('document').ready(function () {
     $('#permissionForm').on('submit', function (event) {
         submitForm = $(this);
         submitBtn = $(this).find('#submitPermissionBtn');
-        url=$(this).data('redirecturl');
+        url = $(this).data('redirecturl');
         event.preventDefault();
         $.ajax({
             url: $(this).attr('action'),
@@ -588,16 +568,16 @@ $('document').ready(function () {
                 } else {
                     $('#permissionForm')[0].reset();
                     $.toast({
-                        text:data.msg,
+                        text: data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
                         hideAfter: 2000,
-                        stack:3,
+                        stack: 3,
                         position: 'top-right'
                     })
-                    window.setTimeout(function() {
-                        window.location.href = url;
-                    }, 2000);
+                    // window.setTimeout(function () {
+                    //     window.location.href = url;
+                    // }, 2000);
                 }
             }
 
@@ -649,6 +629,116 @@ $('document').ready(function () {
 
     // })
 
+    $('body').delegate('#dynamicTableList .deletepermission', 'click', function () {
+        var type = $(this).attr('data-type')
+        var id = $(this).attr('data-id')
+        var action = $(this).attr('data-action')
+        var reloadDatatable = $('#dynamicTableList').DataTable();
+        if (type == 'delete') {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: action,
+                        type: 'get',
+                        dataType: 'json',
+                        success: function (data) {
+                            // loader(0);
+                            if (data.status != 0) {
+                                reloadDatatable.ajax.reload(null, false);
+                            }
+                            $.toast({
+                                text: data.msg,
+                                showHideTransition: 'slide',
+                                icon: 'success',
+                                hideAfter: 2000,
+                                position: 'top-right'
+                            })
+                        }
+                    });
+
+                }
+            })
+
+        }
+    });
+
+    $(document).on('click', 'input[name="permission_allchkbx"]', function (e) {
+        if (this.checked) {
+            $('input[name="permission_singlechkbx"]').each(function () {
+                this.checked = true;
+            })
+        } else {
+            $('input[name="permission_singlechkbx"]').each(function () {
+                this.checked = false;
+            })
+        }
+        togglePerissionBtn()
+    })
+
+    $(document).on('click', 'input[name="permission_singlechkbx"]', function (e) {
+        if ($('input[name="permission_singlechkbx"]').length == $('input[name="permission_singlechkbx"]:checked').length) {
+            $('input[name="permission_allchkbx"]').prop('checked', true);
+        } else {
+            $('input[name="permission_allchkbx"]').prop('checked', false);
+        }
+        togglePerissionBtn()
+    })
+
+    function togglePerissionBtn() {
+        if ($('input[name="permission_singlechkbx"]').length > 0) {
+            $('button#permissionDeleteAll').text('Delete').removeClass('d-none')
+        } 
+        else {
+            $('button#permissionDeleteAll').addClass('d-none')
+        }
+    }
+
+    $(document).on('click', 'button#permissionDeleteAll', function () {
+        var checkedPermission = [];
+        $('input[name="permission_singlechkbx"]:checked').each(function () {
+            checkedPermission.push($(this).data('id'))
+        })
+        var url = $(this).data('url');
+        if (checkedPermission.length > 0) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function (result) {
+                if (result.value) {
+                    $.post(url, {
+                        checked_permission: checkedPermission,
+                        _token: $('[name="_token"]').val(),
+                    }, function (data) {
+                        if (data.status == 1) {
+                            $('#dynamicTableList').DataTable().ajax.reload(null, true);
+                            $.toast({
+                                text: data.msg,
+                                showHideTransition: 'slide',
+                                icon: 'success',
+                                hideAfter: 2000,
+                                stack: 3,
+                                position: 'top-right'
+                            })
+                        }
+                    }, 'json');
+                }
+            })
+        }
+    })
+    
     $('#updateManagePermission').on('submit', function (event) {
         submitForm = $(this);
         submitBtn = $(this).find('#updateManagePermissionBtn');
@@ -676,15 +766,15 @@ $('document').ready(function () {
                     })
                 } else {
                     $('#updateManagePermission')[0].reset();
-                   $.toast({
-                        text:data.msg,
+                    $.toast({
+                        text: data.msg,
                         showHideTransition: 'slide',
                         icon: 'success',
                         hideAfter: 2000,
-                        stack:3,
+                        stack: 3,
                         position: 'top-right'
                     })
-                    window.setTimeout(function() {
+                    window.setTimeout(function () {
                         window.location.reload();
                     }, 2000);
                 }
@@ -693,45 +783,41 @@ $('document').ready(function () {
         })
     })
 
-    $('.deletePermission').on('click', function (event) {
-        // console.log('ok');
-        event.preventDefault();
-        var action = $(this).data('href');
-        // console.log($(this).data('href'));
+    // $('.deletePermission').on('click', function (event) {
+    //     // console.log('ok');
+    //     event.preventDefault();
+    //     var action = $(this).data('href');
+    //     // console.log($(this).data('href'));
+    //     Swal.fire({
+    //         title: 'Are you sure?',
+    //         text: "You won't be able to revert this!",
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Yes, delete it!'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             $.ajax({
+    //                 url: action,
+    //                 type: 'get',
+    //                 dataType: 'json',
+    //                 success: function (data) {
+    //                     $.toast({
+    //                         text: data.msg,
+    //                         showHideTransition: 'slide',
+    //                         icon: 'success',
+    //                         hideAfter: 2000,
+    //                         position: 'top-right'
+    //                     })
 
+    //                     window.setTimeout(function () {
+    //                         window.location.reload();
+    //                     }, 2000);
+    //                 }
+    //             });
 
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                //  window.location.replace(action);
-
-                $.ajax({
-                    url: action,
-                    type: 'get',
-                    dataType: 'json',
-                    beforeSend: function () {
-                        // loader(1);
-                    },
-                    success: function (msg) {
-                        // loader(0);
-                        if (msg.status == 0) {
-                            toaster(msg.title, msg.msg, msg.type);
-                        } else {
-                            window.location.reload();
-                        }
-                    }
-                });
-
-            }
-        })
-    })
-
+    //         }
+    //     })
+    // })
 });

@@ -75,7 +75,7 @@
                         </div>
 
                         <div class="form-group col-md-12">
-                            <button type="submit" id="submitUserForm" class="btn btn-primary btn-block">Submit</button>                            
+                            <button type="submit" id="submitUserForm" class="btn btn-primary">Submit</button>                            
                         </div>
                 </form>
             </div>

@@ -6,15 +6,10 @@
     <div class="col-12">
 
         <div class="card">
-
-            <!-- /.card-header -->
             <div class="card-header">
 
                 <h4 class="m-t-0 header-title font-weight-bold text-center">User List</h4>
             </div>
-            <!-- /.card-header -->
-
-            <!-- /.card-body -->
             <div class="card-body">
 
                 
@@ -31,7 +26,7 @@
                                 <th><input type="checkbox" name="all_checkboxUser"></th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Action <button class="btn btn-sm btn-danger d-none" id="deleteAllUser">Delete All</button></th>
+                                <th>Action <button class="btn btn-sm btn-danger d-none" id="deleteAllUser" data-url="{{ route('user.delete.selected') }}">Delete All</button></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,7 +35,6 @@
 
                     </table>
                 </div>
-                {{-- @endif --}}
             </div>
 
             <!-- /.card-body -->

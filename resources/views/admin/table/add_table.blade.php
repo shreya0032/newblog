@@ -11,7 +11,7 @@
 
     // $tables = DB::select('SHOW TABLES');
 
-    $urls = url()->current();
+$urls = url()->current();
 $url = explode('/', $urls);
 $count = sizeOf($url);
 $lastSeg = $url[$count-2];
@@ -28,6 +28,10 @@ $lastSeg = $url[$count-2];
     <div class="col-12">
         <div class="card">
             <div class="card-header">
+                    <div class="card-title btn-group pull-left  m-t-15">
+                        <a href="{{ route('table.show', $lastSeg) }}" class="btn btn-dark"> Back </a>
+                    </div>
+                
                 <h4 class="m-t-0 header-title font-weight-bold text-center">Add {{ ucfirst($lastSeg) }}</h4>
             </div>
 
@@ -60,7 +64,7 @@ $lastSeg = $url[$count-2];
                         </div>
                     @endforeach
                     <div class="form-group">
-                        <button type="submit" id="" class="btn btn-primary btn-block">Submit</button>
+                        <button type="submit" id="" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
 

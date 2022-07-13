@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 @section('content')
-
+{{-- {{ dd($user->getRoles()) }} --}}
 
 <div class="row">
     <div class="col-12">
@@ -32,18 +32,23 @@
                     <div class="form-group">
                         <label for="roles">Role Assign</label>
                         <select id="roles" name="roles" autocomplete="roles-name"
-                            class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            class="form-select">
+                            <option value="">Choose a role</option>
                             @foreach($roles as $role)
                                 @if ($role->name != "super admin")
-                                   <option 
-                                   @if($user->roles[0]->id == $role->id)
-                                    selected style="background-color: #007bff"
-                                   @endif
-                                   
-                                   value="{{ $role->name }}">{{ $role->name }}</option>
+                                    <option 
+                                    @if( isset($user->roles[0]))
+                                        @if($user->roles[0]->id == $role->id)
+                                        selected style="background-color: #007bff"
+                                        @endif
+                                    @endif
+                                    value="{{ $role->name }}"                                     
+                                    >{{ $role->name }}</option>
                                 @endif
+                                
                             @endforeach
-                        </select>
+                        </select><br> 
+                        <span class="text-danger error-text roles_error"></span>
                     </div>
 
                     <div class="form-group">

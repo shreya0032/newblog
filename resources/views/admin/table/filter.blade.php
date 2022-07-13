@@ -13,7 +13,10 @@ $tableName = $url[$count-1];
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="header-title font-weight-bold text-center">Filter</h4>
+                <div class="card-title btn-group pull-left  m-t-15">
+                    <a href="{{ route('table.show', $tableName) }}" class="btn btn-dark"> Back </a>
+                </div>
+                <h4 class="m-t-0 header-title font-weight-bold text-center">Filter</h4>
                 
             </div>
 
@@ -53,7 +56,7 @@ $tableName = $url[$count-1];
                     @endforeach
                     
                     <div class="form-group">
-                        <button type="submit" id="" class="btn btn-primary btn-block">Submit</button>
+                        <button type="submit" id="" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
 

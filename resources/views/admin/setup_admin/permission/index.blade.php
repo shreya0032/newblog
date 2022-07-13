@@ -6,14 +6,10 @@
     <div class="col-12">
 
         <div class="card">
-
-            <!-- /.card-header -->
+            
             <div class="card-header">
                 <h4 class="m-t-0 header-title font-weight-bold text-center">Permission List</h4>
             </div>
-            <!-- /.card-header -->
-
-            <!-- /.card-body -->
             <div class="card-body">
 
                 <div class="mt-4">
@@ -45,8 +41,9 @@
                         width="100%">
                         <thead>
                             <tr>
+                                <th><input type="checkbox" name="permission_allchkbx" id="permissionCheckAll"></th>
                                 <th>Table Name</th>
-                                {{-- <th>Action</th> --}}
+                                <th>Action <button type="button" class="btn btn-sm btn-danger d-none" id="permissionDeleteAll" data-url={{ route('permission.delete.selected') }}>Delete All</button> </th>
                             </tr>
                         </thead>
 
@@ -57,12 +54,8 @@
                     </table>
                 </div>
             </div>
-
-            <!-- /.card-body -->
         </div>
-
     </div>
-    <!-- /.col -->
 </div>
 
 @endsection

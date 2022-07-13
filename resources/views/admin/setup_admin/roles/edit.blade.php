@@ -9,8 +9,6 @@
             <!-- /.card-header -->
             <div class="card-header">
                 <h4 class="m-t-0 header-title font-weight-bold text-center">Update Role </h4>
-                
-                {{-- {{ dd($permission) }} --}}
             </div>
             <!-- /.card-header -->
 

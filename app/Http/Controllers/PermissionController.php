@@ -21,32 +21,35 @@ class PermissionController extends Controller
 
     public function getPermissionList()
     {
-        $permissionList = DB::table('permissions')->whereIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();
+        $permissionList = DB::table('permissions')->whereIn('name', ['add', 'edit', 'details'])->select('id', 'name')->get();
         return DataTables::of($permissionList)
             ->make(true);
     }
 
     public function getTableList()
     {
-        $permissionTable = DB::table('permissions')->orderBy('id', 'asc')->whereNotIn('name', ['add', 'edit', 'delete', 'details'])->select('id', 'name')->get();        return DataTables::of($permissionTable)
-            // ->addColumn('action', function ($data){
-            //         $btn = '';
-            //         $btn = '<a href=" ' . route('permission.edit', $data->id) .' " class="edit btn btn-primary btn-sm">Edit</a>';
-            //         return $btn;
-            //     })
-    
-            // ->rawColumns(['action'])
+        $permissionTable = DB::table('permissions')->orderBy('id', 'asc')->whereNotIn('name', ['add', 'edit', 'details'])->select('id', 'name')->get();
+        return DataTables::of($permissionTable)
+            ->addColumn('action', function ($data) {
+                $btn = '<a href="JavaScript:void(0);" data-action="' . route('permission.delete') . '/' . $data->id . '" data-type="delete" class="delete btn btn-danger btn-sm mr-3 deletepermission" title="Delete">Delete</a>';
+                return $btn;
+            })
+            ->addColumn('checkbox', function ($data) {
+                return '<input type="checkbox" name="permission_singlechkbx" class="checkBoxClass" data-id="' . $data->id . '" />';
+            })
+
+            ->rawColumns(['action', 'checkbox'])
             ->make(true);
     }
-    
+
     public function create()
     {
-        
+
         return view('admin.setup_admin.permission.create');
     }
-    
+
     public function store(Request $request)
-    {  
+    {
         $values = $request->only('name');
         $validator = Validator::make($request->only('name'), [
             'name' => 'required|min:2|max:100|unique:permissions'
@@ -56,17 +59,17 @@ class PermissionController extends Controller
             'name.max' => 'The permission name cannot exit 100 characters',
             'name.unique' => 'The table name for permission has already been taken',
         ]);
-        
+
 
         if ($validator->fails()) {
-           return response()->json(['status'=>0, 'error'=>$validator->errors()->toArray()]);
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
             $permission = new Permission;
             $permission->name = $values['name'];
             if ($permission->save()) {
-                return response()->json(['status'=>1, 'msg'=>'New permission added successfully']);
+                return response()->json(['status' => 1, 'msg' => 'New permission added successfully']);
             } else {
-                return response()->json(['status'=>0, 'msg'=>'Permission not added']);
+                return response()->json(['status' => 0, 'msg' => 'Permission not added']);
             }
         }
     }
@@ -89,7 +92,7 @@ class PermissionController extends Controller
     //         'name.max' => 'The permission name cannot exit 100 characters',
     //         'name.unique' => 'The permission name has already been taken',
     //     ]);
-        
+
 
     //     if ($validator->fails()) {
     //        return response()->json(['status'=>0, 'error'=>$validator->errors()->toArray()]);
@@ -97,7 +100,7 @@ class PermissionController extends Controller
     //         $permission = new Permission;
     //         $permission->name = $values['name'];
     //         if ($permission->save()) {
-                
+
     //             return response()->json(['status'=>1, 'msg'=>'Permission updated successfully']);
     //         } else {
     //             return response()->json(['status'=>0, 'msg'=>'Permission not added']);
@@ -110,14 +113,25 @@ class PermissionController extends Controller
 
     public function delete($id)
     {
-        $permission=Permission::find($id)->delete();
-        if($permission){
-            return redirect()->route('permission.index')->with('message', 'Item delete successful');
-        }
-        else{
-            return redirect()->route('permission.index')->with('message', 'Item delete unsuccessful');
+        
+        $permission = Permission::find($id)->delete();
+        if ($permission) {
+            return response()->json(['status' =>1, 'msg'=>'Permission for table deleted successfully']);
+        } else {
+            return response()->json(['status' =>0, 'msg'=>'Permission for table not deleted']);
         }
     }
 
-    
+    public function deleteSelectedPermission(Request $request)
+    {
+        $checked_permission_id=$request->checked_permission;
+        $checkedDeleted = Permission::whereIn('id', $checked_permission_id)->delete();
+        if($checkedDeleted){
+            return response()->json(['status'=>1, 'msg'=>'Permission for table deleted successfully']);
+        }
+        else{
+            return response()->json(['status'=>0, 'msg'=>'Permission for table not deleted']);
+            
+        }
+    }
 }

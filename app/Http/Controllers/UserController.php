@@ -108,6 +108,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:2|max:100|regex:/[a-zA-Z0-9\s]+/',
             'email' => 'required|email:rfc,dns',
+            'roles' => 'required',
             'avatar'=> 'mimes:jpg,jpeg,png|max:5000'
         ]);
         
@@ -129,7 +130,7 @@ class UserController extends Controller
                         $user->removeRole($roleName);
                         $user->assignRole($request->roles);
                         User::where('id', $request->id)->update($values);
-                        return response()->json(['status' => 1, 'msg' => 'Role added, User updated successfully']);
+                        return response()->json(['status' => 1, 'msg' => 'User updated successfully']);
                     
                     }else {
                         User::where('id', $request->id)->update($values);
@@ -144,9 +145,9 @@ class UserController extends Controller
             else {
                 if($request->roles != null){
                     $user->assignRole($request->roles);
-                    return response()->json(['status' => 1, 'msg' => 'Role assigned']);
+                    return response()->json(['status' => 1, 'msg' => 'Role updated']);
                 }else{
-                    return response()->json(['status' => 0, 'msg' => 'Role cannot be null']);
+                    return response()->json(['status' => 0, 'error' => 'Role cannot be null']);
                 }
                 
             }

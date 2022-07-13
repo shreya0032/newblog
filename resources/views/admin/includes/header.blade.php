@@ -1,9 +1,3 @@
-@php
-
-    $urlArray = explode('/', url()->current());
-    // dd($urlArray[3]);
-@endphp
-
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -16,10 +10,10 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+            <a class="nav-link dropdown-toggle displayProfile" data-backdrop="false" data-toggle="dropdown" href="#">
                 <span class="hidden-xs">{{ ucwords(auth()->user()->name) }}</span>
             </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="max-width: 500px">
                 <div class="user-panel mt-3 pb-3 d-flex">
                     <div class="image">
                         <img src="{{ asset('assets/backend/dist/img/upload/'.auth()->user()->avatar) }}"
@@ -28,15 +22,14 @@
                     <div class="info">
                         <h4>{{ (auth()->user()->name) }}</h4>
                         <p class="text-muted">{{ auth()->user()->email }}</p>
-                        <a href="#" class="btn btn-danger btn-rounded" data-toggle="modal" data-target="#modal-avatar">Update Avatar</a>
+                        <a href="#" class="btn btn-danger btn-rounded avatar" data-toggle="modal" data-target="#modal-avatar">Update Avatar</a>
                     </div>
                 </div>
-                <div class="dropdown-divider"></div>
-
                 <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item profile" data-toggle="modal" data-target="#modal-profile" data-id={{ auth()->user()->id }} data-url={{ route('get.user.profile') }}>
                         <i class="fas fa-user-edit mr-2"></i> Update My Profile
                     </a>
+
                 <div class="dropdown-divider"></div>
                 
                 <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
@@ -55,7 +48,7 @@
 </nav>
 
 
-<div class="modal fade" id="modal-profile">
+<div class="modal fade" id="modal-profile" tabindex="-1" >
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header ">
@@ -115,7 +108,7 @@
                         <label for="exampleInputFile">File input</label>
                         <div class="input-group">
                           <div class="custom-file">
-                            <input type="file" name="avatar">
+                            <input type="file" name="avatar" id="avatar_file">
                           </div>
                         </div>
                         <span class="text-danger error-text avatar_error"></span>
