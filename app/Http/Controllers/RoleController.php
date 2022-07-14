@@ -128,60 +128,60 @@ class RoleController extends Controller
         return view('admin.setup_admin.roles.manage_permission', compact('roles','permissionView', 'permissionTable'));
     }
 
-    // public function updatePermission(Request $request)
-    // {
-   
-    //     $roles= Role::where('id', $request->id)->first();
-       
-    //     $modelRoles= DB::table('role_has_permissions')->where('role_id', $request->id)->get();
-
-    //     if($request->permission != null && $request->table_permission != null ){
-    //         if($roles->hasPermissionTo($request->permission) && $roles->hasPermissionTo($request->table_permission)){
-    //             return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
-    //         }
-    //         else{
-    //             $roles->givePermissionTo($request->permission);
-    //             $roles->givePermissionTo($request->table_permission);
-    //             app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-    //             return response()->json(['status'=>1, 'msg'=>'Permission added']);
-    //         }
-    //     }
-    //     elseif($request->permission == null && $request->table_permission != null){
-    //         if($roles->hasPermissionTo($request->table_permission)){
-    //             return response()->json(['status'=>1, 'msg'=>'This table permission already exists']);
-    //         }
-    //         else{
-    //             $roles->givePermissionTo($request->table_permission);
-    //             app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-    //             return response()->json(['status'=>1, 'msg'=>'New table permission added']);
-    //         }
-            
-    //     }
-    //     elseif($request->permission != null && $request->table_permission == null){
-    //         if($roles->hasPermissionTo($request->permission)){
-    //             return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
-    //         }
-    //         else{
-    //             $roles->givePermissionTo($request->permission);
-    //             app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-    //             return response()->json(['status'=>1, 'msg'=>'Permission added']);
-    //         }
-    //     }
-    //     else{
-
-    //         if($roles->hasAnyPermission(['add', 'edit', 'details', 'delete'])){
-    //             return response()->json(['status'=>1, 'msg'=>'Table permission is blank, Updated']);
-    //         }
-    //         else{
-    //             return response()->json(['status'=>1, 'msg'=>'Permission is null, Please add one']);
-    //         }
-    //     }
-    // }
-
     public function updatePermission(Request $request)
     {
-        dd($request->all());
+   
+        $roles= Role::where('id', $request->id)->first();
+       
+        $modelRoles= DB::table('role_has_permissions')->where('role_id', $request->id)->get();
+
+        if($request->permission != null && $request->table_permission != null ){
+            if($roles->hasPermissionTo($request->permission) && $roles->hasPermissionTo($request->table_permission)){
+                return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
+            }
+            else{
+                $roles->givePermissionTo($request->permission);
+                $roles->givePermissionTo($request->table_permission);
+                app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+                return response()->json(['status'=>1, 'msg'=>'Permission added']);
+            }
+        }
+        elseif($request->permission == null && $request->table_permission != null){
+            if($roles->hasPermissionTo($request->table_permission)){
+                return response()->json(['status'=>1, 'msg'=>'This table permission already exists']);
+            }
+            else{
+                $roles->givePermissionTo($request->table_permission);
+                app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+                return response()->json(['status'=>1, 'msg'=>'New table permission added']);
+            }
+            
+        }
+        elseif($request->permission != null && $request->table_permission == null){
+            if($roles->hasPermissionTo($request->permission)){
+                return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
+            }
+            else{
+                $roles->givePermissionTo($request->permission);
+                app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+                return response()->json(['status'=>1, 'msg'=>'Permission added']);
+            }
+        }
+        else{
+
+            if($roles->hasAnyPermission(['add', 'edit', 'details', 'delete'])){
+                return response()->json(['status'=>1, 'msg'=>'Table permission is blank, Updated']);
+            }
+            else{
+                return response()->json(['status'=>1, 'msg'=>'Permission is null, Please add one']);
+            }
+        }
     }
+
+    // public function updatePermission(Request $request)
+    // {
+    //     dd($request->all());
+    // }
 
     public function delete($id)
     {

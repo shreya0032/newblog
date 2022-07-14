@@ -52,34 +52,23 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         // dd($request);
-        $values = $request->only('table_name');
-        $validator = Validator::make($request->only('table_name'), [
-            'table_name' => 'required|min:2|max:100|unique:permissions'
+        $values = $request->only('name');
+        $validator = Validator::make($request->only('name'), [
+            'name' => 'required|min:2|max:100|unique:permissions'
         ], [
-            'table_name.required' => 'The permission name is required.',
-            'table_name.min' => 'The permission name must be at least 2 characters.',
-            'table_name.max' => 'The permission name cannot exit 100 characters',
-            'table_name.unique' => 'The table name for permission has already been taken',
+            'name.required' => 'The permission name is required.',
+            'name.min' => 'The permission name must be at least 2 characters.',
+            'name.max' => 'The permission name cannot exit 100 characters',
+            'name.unique' => 'The table name for permission has already been taken',
         ]);
 
 
         if ($validator->fails()) {
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            $permissionView = ['add', 'edit', 'details'];
-            foreach($permissionView as $permissions){
-                $permission = new Permission;
-                $permission->table_name = $values['table_name'];
-                $permission->name = $permissions;
-                $save = $permission->save();
-                
-            }
-            
-            // $permission->name = "Add";
-            // $permission->name = "Edit";
-            // $permission->name = "Details";
-
-            if ($save) {
+            $permission = new Permission;
+            $permission->name = $values['name'];
+            if ($permission->save()) {
                 // return redirect()->back()->withErrors($validator)->with('error', 'Validation failed')->withInput();
                 return response()->json(['status' => 1, 'msg' => 'New permission added successfully']);
             } else {
