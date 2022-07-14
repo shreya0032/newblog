@@ -26,7 +26,7 @@
                                 <a href="" class="delete btn btn-info btn-sm link-light deleteper" data-type="delete"  title="Delete">
                                     "{{ $role_permission->name }}"
                                 </a>
-                                <i data-href="{{ route('roles.permission.delete', [$roles->id, $role_permission->id]) }}" class="fa fa-times deletePermission" aria-hidden="true" id=""  style="color: black;"></i>                                                
+                                <i data-href="{{ route('roles.permission.delete', [$roles->id, $role_permission->id]) }}" class="fa fa-times deleteManagePermission" aria-hidden="true" id=""  style="color: black;"></i>                                                
                             
                         </button>
                         @endif
@@ -43,7 +43,7 @@
                         <option value="{{ $permission->name }}">{{ $permission->name }}</option>
                     @endforeach
                 </select>
-                <span class="text-danger error-text name_error"></span>
+                <span class="text-danger error-text permission_error"></span>
             </div>
 
 
@@ -58,7 +58,7 @@
                             <a href="" class="delete btn btn-info btn-sm link-light deleteper" data-type="delete"  title="Delete">
                                 {{ $role_permission->name }}
                             </a>
-                            <i data-href="{{ route('roles.permission.delete', [$roles->id, $role_permission->id]) }}" class="fa fa-times deletePermission" aria-hidden="true" id=""  style="color: black;"></i>                                                
+                            <i data-href="{{ route('roles.permission.delete', [$roles->id, $role_permission->id]) }}" class="fa fa-times deleteManagePermission" aria-hidden="true" id=""  style="color: black;"></i>                                                
                         
                         </button>
                     @endforeach

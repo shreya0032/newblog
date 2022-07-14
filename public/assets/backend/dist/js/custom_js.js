@@ -1,5 +1,21 @@
 $('document').ready(function () {
+    $(function () {
+        var url = window.location;
+        // for single sidebar menu
+        $('ul.nav-sidebar a').filter(function () {
+            return this.href == url;
+        }).addClass('active');
+    
+        // for sidebar menu and treeview
+        $('ul.nav-treeview a').filter(function () {
+            return this.href == url;
+        }).parentsUntil(".nav-sidebar > .nav-treeview")
+            .css({'display': 'block'})
+            .addClass('menu-open').prev('a')
+            .addClass('active');
+    });
 
+    
     $('#createUserForm').on('submit', function (event) {
         event.preventDefault();
         submitForm = $(this);
@@ -181,7 +197,7 @@ $('document').ready(function () {
         var id = $(this).data('id');
         var url = $(this).data('url');
         $('.error-text').text('');
-       
+
         $.ajax({
             url: url + '/' + id,
             type: 'GET',
@@ -192,12 +208,12 @@ $('document').ready(function () {
             }
         })
     })
-    
-    
+
+
     $('.avatar').click(function (e) {
         e.preventDefault();
-        $('.error-text').text('');  
-        $('#avatar_file').val('')     ;
+        $('.error-text').text('');
+        $('#avatar_file').val('');
     })
 
     $('#updateUserProfile').on('submit', function (event) {
@@ -215,7 +231,7 @@ $('document').ready(function () {
             contentType: false,
             beforeSend: function () {
                 submitBtn.attr("disabled", "disabled").text('Please wait..')
-                $(document).find('span.error-text').text('');                
+                $(document).find('span.error-text').text('');
 
             },
             success: function (data) {
@@ -246,7 +262,7 @@ $('document').ready(function () {
         })
     })
 
-    
+
     $('body').delegate('#userlist .deleteuser', 'click', function () {
         var type = $(this).attr('data-type')
         var id = $(this).attr('data-id')
@@ -268,7 +284,7 @@ $('document').ready(function () {
                         url: action,
                         type: 'get',
                         dataType: 'json',
-                        beforeSend: function () {},
+                        beforeSend: function () { },
                         success: function (data) {
                             if (data.status != 0) {
                                 reloadDatatable.ajax.reload(null, false);
@@ -296,7 +312,7 @@ $('document').ready(function () {
         event.preventDefault();
         submitForm = $(this);
         submitBtn = $(this).find('#submitUserAvatar');
-        
+
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -695,7 +711,7 @@ $('document').ready(function () {
     function togglePerissionBtn() {
         if ($('input[name="permission_singlechkbx"]').length > 0) {
             $('button#permissionDeleteAll').text('Delete').removeClass('d-none')
-        } 
+        }
         else {
             $('button#permissionDeleteAll').addClass('d-none')
         }
@@ -738,7 +754,7 @@ $('document').ready(function () {
             })
         }
     })
-    
+
     $('#updateManagePermission').on('submit', function (event) {
         submitForm = $(this);
         submitBtn = $(this).find('#updateManagePermissionBtn');
@@ -760,9 +776,13 @@ $('document').ready(function () {
             success: function (data) {
                 submitBtn.attr("disabled", false).text('Assign');
                 if (data.status == 0) {
-                    // console.log('not ok');
-                    $.each(data.error, function (prefix, val) {
-                        $('span.' + prefix + '_error').text(val[0])
+                    $.toast({
+                        text: data.msg,
+                        showHideTransition: 'slide',
+                        icon: 'error',
+                        hideAfter: 2000,
+                        stack: 3,
+                        position: 'top-right'
                     })
                 } else {
                     $('#updateManagePermission')[0].reset();
@@ -783,41 +803,41 @@ $('document').ready(function () {
         })
     })
 
-    // $('.deletePermission').on('click', function (event) {
-    //     // console.log('ok');
-    //     event.preventDefault();
-    //     var action = $(this).data('href');
-    //     // console.log($(this).data('href'));
-    //     Swal.fire({
-    //         title: 'Are you sure?',
-    //         text: "You won't be able to revert this!",
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'Yes, delete it!'
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             $.ajax({
-    //                 url: action,
-    //                 type: 'get',
-    //                 dataType: 'json',
-    //                 success: function (data) {
-    //                     $.toast({
-    //                         text: data.msg,
-    //                         showHideTransition: 'slide',
-    //                         icon: 'success',
-    //                         hideAfter: 2000,
-    //                         position: 'top-right'
-    //                     })
+    $('.deleteManagePermission').on('click', function (event) {
+        // console.log('ok');
+        event.preventDefault();
+        var action = $(this).data('href');
+        // console.log($(this).data('href'));
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: action,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (data) {
+                        $.toast({
+                            text: data.msg,
+                            showHideTransition: 'slide',
+                            icon: 'success',
+                            hideAfter: 2000,
+                            position: 'top-right'
+                        })
 
-    //                     window.setTimeout(function () {
-    //                         window.location.reload();
-    //                     }, 2000);
-    //                 }
-    //             });
+                        window.setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);
+                    }
+                });
 
-    //         }
-    //     })
-    // })
+            }
+        })
+    })
 });

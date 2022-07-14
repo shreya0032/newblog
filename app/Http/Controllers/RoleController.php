@@ -137,7 +137,7 @@ class RoleController extends Controller
 
         if($request->permission != null && $request->table_permission != null ){
             if($roles->hasPermissionTo($request->permission) && $roles->hasPermissionTo($request->table_permission)){
-                return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
+                return response()->json(['status'=>0, 'msg'=>'Permission already exists']);
             }
             else{
                 $roles->givePermissionTo($request->permission);
@@ -148,7 +148,8 @@ class RoleController extends Controller
         }
         elseif($request->permission == null && $request->table_permission != null){
             if($roles->hasPermissionTo($request->table_permission)){
-                return response()->json(['status'=>1, 'msg'=>'This table permission already exists']);
+                return response()->json(['status'=>0, 'msg'=>'This table permission already exists']);
+                
             }
             else{
                 $roles->givePermissionTo($request->table_permission);
@@ -159,7 +160,8 @@ class RoleController extends Controller
         }
         elseif($request->permission != null && $request->table_permission == null){
             if($roles->hasPermissionTo($request->permission)){
-                return response()->json(['status'=>1, 'msg'=>'Permission already exists']);
+                return response()->json(['status'=>0, 'msg'=>'Permission already exists']);
+                
             }
             else{
                 $roles->givePermissionTo($request->permission);
@@ -173,7 +175,8 @@ class RoleController extends Controller
                 return response()->json(['status'=>1, 'msg'=>'Table permission is blank, Updated']);
             }
             else{
-                return response()->json(['status'=>1, 'msg'=>'Permission is null, Please add one']);
+                return response()->json(['status'=>0, 'msg'=>'Permission is null, Please add one']);
+                
             }
         }
     }

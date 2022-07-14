@@ -25,7 +25,7 @@ Auth::routes();
 
 Route::redirect('/', 'login');
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // // Route::get('/', [HomeController::class, 'login'])->name('auth.login');
 // Route::post('/login', [HomeController::class, 'checkLogin'])->name('check.login');
