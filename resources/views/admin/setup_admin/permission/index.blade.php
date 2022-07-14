@@ -12,7 +12,7 @@
             </div>
             <div class="card-body">
 
-                <div class="mt-4">
+                <!-- <div class="mt-4">
                     <table id="permissionList"
                         class="table tableStyle table-bordered table-bordered dt-responsive nowrap" cellspacing="0"
                         width="100%">
@@ -27,7 +27,7 @@
                         </tbody>
 
                     </table>
-                </div>
+                </div> -->
 
                 <div class="mt-4">
                     <div class="pull-right">

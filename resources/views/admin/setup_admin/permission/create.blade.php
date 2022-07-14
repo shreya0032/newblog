@@ -21,21 +21,22 @@
                             <label for="permission">Permission</label>
                             <input type="text" id="permission" class="form-control" name="name">
                             <span class="text-danger error-text name_error"></span>
-                        </div> --}}
+                        </div> --}}   
 
                     <div class="form-group">
                         <label for="permission">Permission</label>
-                        <select id="permission" name="name" class="form-control">
+                        <select id="permission" name="table_name" class="form-control">
                             <option value=" ">Choose table for permission</option>
                             @foreach($dynamic_table as $table)
                                 <option value="{{ $table->Tables_in_dbms }}">{{ $table->Tables_in_dbms }}</option>
                             @endforeach
-                        </select> <br>
-                        <span class="text-danger error-text name_error"></span>
+                        </select> 
+                        <span class="text-danger error-text table_name_error"></span>
                     </div>
 
                     <div class="form-group">
                         <button type="submit" id="submitPermissionBtn" class="btn btn-primary">Submit</button>
+                        <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
                     </div>
 
 

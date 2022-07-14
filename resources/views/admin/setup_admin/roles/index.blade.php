@@ -6,14 +6,9 @@
     <div class="col-12">
 
         <div class="card">
-
-            <!-- /.card-header -->
             <div class="card-header">
                 <h4 class="m-t-0 header-title font-weight-bold text-center">Role Lists</h4>
             </div>
-            <!-- /.card-header -->
-
-            <!-- /.card-body -->
             <div class="card-body">
                 
                 <div class="pull-right">
@@ -41,12 +36,8 @@
                 </table>
                 </div>
             </div>
-
-            <!-- /.card-body -->
         </div>
-
     </div>
-    <!-- /.col -->
 </div>
 
 @endsection

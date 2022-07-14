@@ -29,6 +29,7 @@ class PermissionController extends Controller
     public function getTableList()
     {
         $permissionTable = DB::table('permissions')->orderBy('id', 'asc')->whereNotIn('name', ['add', 'edit', 'details'])->select('id', 'name')->get();
+        // $permissionTable = DB::table('permissions')->orderBy('id', 'asc')->select('id', 'name')->get();
         return DataTables::of($permissionTable)
             ->addColumn('action', function ($data) {
                 $btn = '<a href="JavaScript:void(0);" data-action="' . route('permission.delete') . '/' . $data->id . '" data-type="delete" class="delete btn btn-danger btn-sm mr-3 deletepermission" title="Delete">Delete</a>';
@@ -50,23 +51,36 @@ class PermissionController extends Controller
 
     public function store(Request $request)
     {
-        $values = $request->only('name');
-        $validator = Validator::make($request->only('name'), [
-            'name' => 'required|min:2|max:100|unique:permissions'
+        // dd($request);
+        $values = $request->only('table_name');
+        $validator = Validator::make($request->only('table_name'), [
+            'table_name' => 'required|min:2|max:100|unique:permissions'
         ], [
-            'name.required' => 'The permission name is required.',
-            'name.min' => 'The permission name must be at least 2 characters.',
-            'name.max' => 'The permission name cannot exit 100 characters',
-            'name.unique' => 'The table name for permission has already been taken',
+            'table_name.required' => 'The permission name is required.',
+            'table_name.min' => 'The permission name must be at least 2 characters.',
+            'table_name.max' => 'The permission name cannot exit 100 characters',
+            'table_name.unique' => 'The table name for permission has already been taken',
         ]);
 
 
         if ($validator->fails()) {
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            $permission = new Permission;
-            $permission->name = $values['name'];
-            if ($permission->save()) {
+            $permissionView = ['add', 'edit', 'details'];
+            foreach($permissionView as $permissions){
+                $permission = new Permission;
+                $permission->table_name = $values['table_name'];
+                $permission->name = $permissions;
+                $save = $permission->save();
+                
+            }
+            
+            // $permission->name = "Add";
+            // $permission->name = "Edit";
+            // $permission->name = "Details";
+
+            if ($save) {
+                // return redirect()->back()->withErrors($validator)->with('error', 'Validation failed')->withInput();
                 return response()->json(['status' => 1, 'msg' => 'New permission added successfully']);
             } else {
                 return response()->json(['status' => 0, 'msg' => 'Permission not added']);
